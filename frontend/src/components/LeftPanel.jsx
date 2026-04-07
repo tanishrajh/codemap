@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import AgentLogs from './AgentLogs';
 
 export default function LeftPanel({ mode, setMode, repoUrl, setRepoUrl, file, setFile, onAnalyze, loading, analysisComplete, history = [], onHistorySelect, onClearHistory }) {
     const [urlError, setUrlError] = useState('');
@@ -25,35 +24,36 @@ export default function LeftPanel({ mode, setMode, repoUrl, setRepoUrl, file, se
         const diff = Date.now() - ts;
         const mins = Math.floor(diff / 60000);
         if (mins < 1) return 'just now';
-        if (mins < 60) return `${mins}m ago`;
+        if (mins < 60) return `${mins}m`;
         const hrs = Math.floor(mins / 60);
-        if (hrs < 24) return `${hrs}h ago`;
+        if (hrs < 24) return `${hrs}h`;
         const days = Math.floor(hrs / 24);
-        return `${days}d ago`;
+        return `${days}d`;
     };
 
     return (
-        <div className="w-80 h-full rounded-3xl shadow-xl border border-slate-200 p-6 flex flex-col gap-6 bg-white shrink-0">
+        <div className="w-[340px] h-full flex flex-col gap-5 bg-[#FFDEE9] border-[3px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-5 shrink-0 z-10 transition-all">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b-[3px] border-black pb-4">
                 <div>
-                    <h1 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500 tracking-tight">
-                        AGCIA
+                    <h1 className="text-3xl font-black text-black tracking-tighter uppercase leading-none" style={{ textShadow: "2px 2px 0px #FFF" }}>
+                        CodeMap
                     </h1>
-                    <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Autonomous Goal-Driven Codebase Intelligence Agent</p>
+                    <p className="text-[10px] text-black font-bold uppercase mt-1 tracking-widest bg-white inline-block px-1 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                        Structural Engine
+                    </p>
                 </div>
-                {/* History Toggle */}
+                
+                {/* History Button */}
                 <button
                     onClick={() => setHistoryOpen(!historyOpen)}
-                    className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 border ${historyOpen
-                        ? 'bg-blue-50 border-blue-200 text-blue-600'
-                        : 'bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-                        }`}
-                    title="Analysis History"
+                    className="relative w-10 h-10 border-[3px] border-black bg-[#C2EABD] text-black font-black flex items-center justify-center transition-transform hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[4px_4px_0_0_#000000] active:translate-y-0 active:translate-x-0 active:shadow-none"
                 >
-                    <span className="text-sm">🕘</span>
+                    H
                     {history.length > 0 && !historyOpen && (
-                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-blue-600 text-[8px] text-white font-bold flex items-center justify-center">{history.length}</span>
+                        <span className="absolute -top-2 -right-2 w-4 h-4 bg-[#FF6B6B] border-2 border-black text-white text-[9px] flex items-center justify-center font-bold">
+                            {history.length}
+                        </span>
                     )}
                 </button>
             </div>
@@ -62,46 +62,39 @@ export default function LeftPanel({ mode, setMode, repoUrl, setRepoUrl, file, se
             <AnimatePresence>
                 {historyOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden"
+                        initial={{ opacity: 0, height: 0, borderBottomWidth: 0 }}
+                        animate={{ opacity: 1, height: 'auto', borderBottomWidth: 3 }}
+                        exit={{ opacity: 0, height: 0, borderBottomWidth: 0 }}
+                        className="overflow-hidden border-black border-l-0 border-r-0 border-t-0"
                     >
-                        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-3 space-y-2">
-                            <div className="flex items-center justify-between mb-1 px-1">
-                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recent Analyses</h4>
+                        <div className="py-2 space-y-2 mb-2">
+                            <div className="flex items-center justify-between px-1">
+                                <h4 className="text-[11px] font-black text-black uppercase tracking-widest bg-yellow-300 px-1 border border-black">History</h4>
                                 {history.length > 0 && (
-                                    <button onClick={onClearHistory} className="text-[9px] text-slate-500 hover:text-red-500 transition-colors font-bold uppercase">Clear</button>
+                                    <button onClick={onClearHistory} className="text-[10px] text-white bg-black px-2 py-0.5 font-bold uppercase hover:bg-red-500">Wipe</button>
                                 )}
                             </div>
                             {history.length === 0 ? (
-                                <p className="text-[10px] text-slate-400 text-center py-2 italic flex items-center justify-center h-12">No history yet</p>
+                                <p className="text-[11px] font-bold text-black py-2 bg-white border-2 border-black text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">EMPTY</p>
                             ) : (
-                                <div className="space-y-1.5 max-h-[180px] overflow-y-auto custom-scrollbar">
+                                <div className="space-y-2 max-h-[160px] overflow-y-auto px-1 pb-1">
                                     {history.map((entry, i) => (
-                                        <motion.button
+                                        <button
                                             key={entry.url + i}
                                             onClick={() => { onHistorySelect(entry); setHistoryOpen(false); }}
-                                            whileHover={{ x: 2 }}
-                                            className="w-full text-left bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-100 rounded-xl p-2.5 transition-all duration-200 group"
+                                            className="w-full text-left bg-white border-2 border-black p-2 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all"
                                         >
                                             <div className="flex items-center justify-between mb-1">
-                                                <span className="text-[11px] text-slate-700 font-semibold truncate max-w-[170px] group-hover:text-blue-600 transition-colors">
+                                                <span className="text-[11px] text-black font-black truncate max-w-[170px]">
                                                     {entry.name}
                                                 </span>
-                                                <span className="text-[9px] text-slate-400 font-mono shrink-0 ml-2">{formatTimeAgo(entry.timestamp)}</span>
+                                                <span className="text-[9px] text-white bg-black px-1 font-bold">{formatTimeAgo(entry.timestamp)}</span>
                                             </div>
-                                            <div className="flex items-center gap-3 text-[9px] text-slate-500">
-                                                <span className="flex items-center gap-1">
-                                                    <span className="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
-                                                    {entry.files} files
-                                                </span>
-                                                <span className="flex items-center gap-1">
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${entry.issues > 0 ? 'bg-red-400' : 'bg-emerald-400'}`}></span>
-                                                    {entry.issues} issues
-                                                </span>
+                                            <div className="flex gap-2 text-[9px] font-black">
+                                                <span className="bg-[#C2EABD] border border-black px-1">{entry.files} files</span>
+                                                <span className={`border border-black px-1 ${entry.issues > 0 ? 'bg-[#FF6B6B] text-white' : 'bg-gray-200'}`}>{entry.issues} issues</span>
                                             </div>
-                                        </motion.button>
+                                        </button>
                                     ))}
                                 </div>
                             )}
@@ -111,78 +104,66 @@ export default function LeftPanel({ mode, setMode, repoUrl, setRepoUrl, file, se
             </AnimatePresence>
 
             {/* Mode Switcher */}
-            <div className="flex bg-slate-100 border border-slate-200 rounded-full p-1 gap-1">
+            <div className="flex gap-2 mt-2">
                 <button
                     onClick={() => { setMode('github'); setUrlError(''); }}
-                    className={`flex-1 py-1.5 px-3 text-sm font-medium rounded-full transition-all duration-200 ${mode === 'github' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}
+                    className={`flex-1 py-1.5 text-xs font-black uppercase border-[3px] border-black transition-all ${mode === 'github' ? 'bg-[#FFD166] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5 -translate-x-0.5' : 'bg-white hover:bg-gray-100'}`}
                 >
                     GitHub
                 </button>
                 <button
                     onClick={() => { setMode('local'); setUrlError(''); }}
-                    className={`flex-1 py-1.5 px-3 text-sm font-medium rounded-full transition-all duration-200 ${mode === 'local' ? 'bg-white text-blue-600 shadow-sm font-bold' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}
+                    className={`flex-1 py-1.5 text-xs font-black uppercase border-[3px] border-black transition-all ${mode === 'local' ? 'bg-[#118AB2] text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5 -translate-x-0.5' : 'bg-white hover:bg-gray-100'}`}
                 >
-                    Local
+                    Local ZIP
                 </button>
             </div>
 
-            {/* Inputs */}
-            <div className="flex flex-col gap-4">
+            {/* Input Form */}
+            <div className="flex flex-col gap-3 mt-2">
                 {mode === 'github' ? (
                     <div>
-                        <label className="block text-xs font-semibold text-slate-500 mb-2 uppercase tracking-widest pl-1">GitHub Repo URL</label>
                         <input
                             type="text"
                             value={repoUrl}
                             onChange={(e) => { setRepoUrl(e.target.value); setUrlError(''); }}
-                            placeholder="https://github.com/user/repo"
-                            className="w-full bg-white border border-slate-300 rounded-full px-5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 shadow-sm"
+                            placeholder="GITHUB URL (HTTPS)"
+                            className="w-full bg-white border-[3px] border-black p-3 text-sm font-bold text-black placeholder:text-gray-400 placeholder:font-black focus:outline-none focus:shadow-[4px_4px_0_0_#000] focus:-translate-y-1 focus:-translate-x-1 transition-all"
                         />
                     </div>
                 ) : (
-                    <div>
-                        <label className="block text-xs font-semibold text-slate-500 mb-2 uppercase tracking-widest pl-1">Upload Local Repo (.zip)</label>
+                    <div className="bg-white border-[3px] border-black p-3 hover:shadow-[4px_4px_0_0_#000] transition-all">
                         <input
                             type="file"
                             accept=".zip"
                             onChange={(e) => { setFile(e.target.files[0]); setUrlError(''); }}
-                            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100 file:transition-colors file:duration-200 cursor-pointer"
+                            className="block w-full text-[11px] font-black text-black file:mr-2 file:py-1 file:px-2 file:border-[2px] file:border-black file:text-[11px] file:font-black file:uppercase file:bg-[#FFD166] hover:file:bg-[#FFC03A] cursor-pointer"
                         />
                         {file && (
-                            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-emerald-600 mt-3 truncate font-medium pl-1">
-                                ✓ {file.name}
-                            </motion.p>
+                            <div className="text-[10px] font-black bg-[#C2EABD] border-2 border-black inline-block px-2 py-0.5 mt-2 truncate max-w-full">
+                                {file.name}
+                            </div>
                         )}
                     </div>
                 )}
             </div>
 
-            {/* Error Message */}
             {urlError && (
-                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-2xl px-4 py-3 shadow-sm">
-                    {urlError}
-                </motion.p>
+                <div className="bg-[#FF6B6B] border-[3px] border-black text-white font-black text-xs p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    ERROR: {urlError}
+                </div>
             )}
 
-            {/* Agent Logs */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 bg-slate-50 rounded-2xl border border-slate-200 p-1">
-                <AgentLogs loading={loading} isComplete={analysisComplete} />
-            </div>
+            <div className="flex-1"></div> {/* Spacer since agent logs are gone */}
 
             {/* Analyze Button */}
-            <motion.button
+            <button
                 onClick={handleAnalyze}
                 disabled={loading}
-                whileTap={{ scale: loading ? 1 : 0.97 }}
-                className="w-full py-3.5 mt-auto bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-full transition-all duration-200 shadow-md hover:shadow-lg disabled:shadow-none tracking-wide"
+                className={`w-full py-4 text-sm uppercase font-black border-[4px] border-black transition-all ${loading ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#EF476F] text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[6px] active:translate-x-[6px] active:shadow-none'}`}
             >
-                {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                        <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="inline-block w-4 h-4 border-2 border-slate-400 border-t-white rounded-full" />
-                        Analyzing...
-                    </span>
-                ) : "Analyze Repository"}
-            </motion.button>
+                {loading ? "PROCESSING..." : "ANALYZE NOW >>"}
+            </button>
         </div>
     );
 }

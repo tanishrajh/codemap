@@ -1,98 +1,94 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import LeftPanel from './components/LeftPanel';
 import CenterPanel from './components/CenterPanel';
 import RightPanel from './components/RightPanel';
-
-const HISTORY_KEY = 'agcia_history';
-const MAX_HISTORY = 10;
+import { processRepository } from './services/apiService';
 
 function App() {
-  const [mode, setMode] = useState('github');
+  const [mode, setMode] = useState('github'); // 'github' or 'local'
   const [repoUrl, setRepoUrl] = useState('');
   const [file, setFile] = useState(null);
+
+  // Global state
   const [loading, setLoading] = useState(false);
+  const [analysisComplete, setAnalysisComplete] = useState(false);
   const [response, setResponse] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  const [history, setHistory] = useState([]);
 
-  // Load history from localStorage on mount
-  useEffect(() => {
+  const [history, setHistory] = useState(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-      setHistory(stored);
-    } catch { setHistory([]); }
-  }, []);
+      const saved = localStorage.getItem('codemap_history');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
 
-  const saveHistory = (entry) => {
-    const updated = [entry, ...history.filter(h => h.url !== entry.url)].slice(0, MAX_HISTORY);
+  const saveToHistory = (data, requestData) => {
+    const newEntry = {
+      timestamp: Date.now(),
+      name: requestData.url ? requestData.url.split('/').pop() : requestData.fileName,
+      url: requestData.url || requestData.fileName,
+      files: data.nodes?.length || 0,
+      issues: data.issues?.length || 0,
+      data: data
+    };
+    const updated = [newEntry, ...history.filter(h => h.url !== newEntry.url)].slice(0, 10);
     setHistory(updated);
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
-  };
-
-  const handleAnalyze = async () => {
-    setLoading(true);
-    setResponse(null);
-    setSelectedNode(null);
-    try {
-      let fetchOptions = { method: 'POST' };
-
-      if (mode === 'github') {
-        fetchOptions.headers = { 'Content-Type': 'application/json' };
-        fetchOptions.body = JSON.stringify({ type: 'github', repoUrl });
-      } else {
-        const formData = new FormData();
-        formData.append('type', 'local');
-        if (file) formData.append('file', file);
-        fetchOptions.body = formData;
-      }
-
-      const res = await fetch('http://localhost:3000/api/analyze', fetchOptions);
-      const data = await res.json();
-      setResponse(data);
-
-      // Save to history on success
-      if (!data.error) {
-        const repoName = mode === 'github'
-          ? repoUrl.replace(/https?:\/\/github\.com\//, '').replace(/\.git$/, '')
-          : file?.name || 'Local Upload';
-
-        saveHistory({
-          url: mode === 'github' ? repoUrl : `local:${file?.name || 'upload'}`,
-          name: repoName,
-          mode,
-          files: data.projectOverview?.summary?.totalFiles || data.nodes?.length || 0,
-          issues: data.issues?.length || 0,
-          timestamp: Date.now()
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      setResponse({ error: 'Failed to fetch from backend. Make sure it is running.' });
-    } finally {
-      setLoading(false);
-    }
+    localStorage.setItem('codemap_history', JSON.stringify(updated));
   };
 
   const handleHistorySelect = (entry) => {
-    if (entry.mode === 'github') {
-      setMode('github');
-      setRepoUrl(entry.url);
+    setLoading(true);
+    setAnalysisComplete(false);
+    setSelectedNode(null);
+    if (entry.url && entry.url.includes('github')) {
+      setMode('github'); setRepoUrl(entry.url);
     } else {
       setMode('local');
     }
+    
+    // Simulate loading to preserve the theatrical agent UI experience
+    setTimeout(() => {
+      setResponse(entry.data);
+      setAnalysisComplete(true);
+      setLoading(false);
+    }, 1500);
   };
 
-  const handleClearHistory = () => {
-    setHistory([]);
-    localStorage.removeItem(HISTORY_KEY);
+  const handleAnalyze = async () => {
+    if (mode === 'github' && !repoUrl) return;
+    if (mode === 'local' && !file) return;
+
+    setLoading(true);
+    setAnalysisComplete(false);
+    setResponse(null);
+    setSelectedNode(null);
+
+    const formData = new FormData();
+    if (mode === 'github') formData.append('url', repoUrl);
+    else formData.append('file', file);
+
+    const data = await processRepository(formData);
+
+    if (!data.error) {
+      saveToHistory(data, { url: mode === 'github' ? repoUrl : null, fileName: mode === 'local' ? file.name : null });
+    }
+
+    setResponse(data);
+    setAnalysisComplete(true);
+    setTimeout(() => setLoading(false), 500); 
   };
 
-  const handleIssueClick = (file) => {
-    setSelectedNode(file);
+  const wrapIssueClick = (nodeId) => {
+    const node = response?.nodes?.find(n => n.id === nodeId || n.path === nodeId);
+    if (node) {
+      setSelectedNode(node.id);
+    } else {
+       console.warn('Node not found for issue:', nodeId);
+    }
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-100 p-4 gap-4 overflow-hidden font-sans box-border">
+    <div className="flex h-screen w-full bg-[#E5E1DA] p-4 gap-4 overflow-hidden font-sans box-border selection:bg-black selection:text-[#00FF41]">
       <LeftPanel
         mode={mode}
         setMode={setMode}
@@ -102,10 +98,10 @@ function App() {
         setFile={setFile}
         onAnalyze={handleAnalyze}
         loading={loading}
-        analysisComplete={!!response && !response.error}
+        analysisComplete={analysisComplete}
         history={history}
         onHistorySelect={handleHistorySelect}
-        onClearHistory={handleClearHistory}
+        onClearHistory={() => { setHistory([]); localStorage.removeItem('codemap_history'); }}
       />
       <CenterPanel
         response={response}
@@ -118,7 +114,7 @@ function App() {
         loading={loading}
         selectedNode={selectedNode}
         onClearSelection={() => setSelectedNode(null)}
-        onIssueClick={handleIssueClick}
+        onIssueClick={wrapIssueClick}
       />
     </div>
   );
