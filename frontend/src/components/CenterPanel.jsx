@@ -7,6 +7,8 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
     const fgRef = useRef();
     const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
     const [legendOpen, setLegendOpen] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -158,9 +160,27 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
 
     const { nodes, edges } = response;
     const graphData = {
-        nodes: nodes.map(n => ({ id: n.id, category: n.category, importanceLevel: n.importanceLevel })),
+        nodes: nodes.map(n => ({ ...n })),
         links: edges.map(e => ({ source: e.source, target: e.target }))
     };
+
+    const handleSearchSelect = (node) => {
+        if (!fgRef.current || !node) return;
+        
+        // Use coordinates if available, otherwise force simulation to settle a bit
+        const x = node.x ?? 0;
+        const y = node.y ?? 0;
+        
+        fgRef.current.centerAt(x, y, 1000);
+        fgRef.current.zoom(2.5, 1000);
+        onNodeSelected(node.id);
+        setSearchTerm('');
+        setShowSuggestions(false);
+    };
+
+    const suggestions = searchTerm 
+        ? nodes.filter(n => n.id.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 5)
+        : [];
 
     return (
         <div className="flex-1 overflow-hidden relative bg-white border-[4px] border-black shadow-[8px_8px_0_0_#000]" ref={containerRef}>
@@ -183,7 +203,7 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
             </motion.div>
 
             {/* Collapsible Legend */}
-            <div className="absolute top-5 left-5 z-10">
+            <div className="absolute top-5 left-5 z-10 font-mono">
                 <button onClick={() => setLegendOpen(!legendOpen)} className="bg-[#FFD166] border-[3px] border-black px-4 py-2 shadow-[4px_4px_0_0_#000] text-black font-black uppercase hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0_0_#000] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all flex items-center gap-2">
                     KEY <span className="text-black text-[10px]">{legendOpen ? '▲' : '▼'}</span>
                 </button>
@@ -211,6 +231,51 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
                         </motion.div>
                     )}
                 </AnimatePresence>
+            </div>
+
+            {/* Smart Search */}
+            <div className="absolute top-5 right-5 z-20 w-64 font-mono">
+                <div className="relative">
+                    <input 
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setShowSuggestions(true);
+                        }}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                        placeholder="SEARCH FILES..."
+                        className="w-full bg-white border-[3px] border-black p-3 text-xs font-black uppercase outline-none shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] transition-all placeholder:text-gray-400"
+                    />
+                    <div className="absolute top-0 right-0 h-full flex items-center pr-3 pointer-events-none">
+                        <span className="text-lg">🔍</span>
+                    </div>
+
+                    <AnimatePresence>
+                        {showSuggestions && suggestions.length > 0 && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+                                className="absolute top-full left-0 w-full mt-2 bg-[#F3C623] border-[3px] border-black shadow-[4px_4px_0_0_#000] overflow-hidden"
+                            >
+                                {suggestions.map((suggestion, idx) => (
+                                    <div 
+                                        key={idx}
+                                        onClick={() => handleSearchSelect(suggestion)}
+                                        className="p-2 border-b-2 border-black last:border-0 hover:bg-black hover:text-white cursor-pointer group flex items-center justify-between transition-colors"
+                                    >
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-[10px] font-black truncate">{suggestion.id.split('/').pop()}</span>
+                                            <span className="text-[7px] opacity-70 truncate uppercase">{suggestion.id}</span>
+                                        </div>
+                                        <div className="w-4 h-4 bg-white border-2 border-black flex items-center justify-center text-[8px] font-black group-hover:bg-yellow-400 group-hover:text-black">
+                                            →
+                                        </div>
+                                    </div>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
         </div>
     );
