@@ -29,7 +29,7 @@ const FileTreeNode = ({ node, level = 0, onNodeClick }) => {
                     if (isFolder) setExpanded(!expanded);
                     else if (onNodeClick && node.path) onNodeClick(node.path);
                 }}
-                className={`flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-100 cursor-pointer transition-colors ${isFolder ? 'text-slate-700' : 'text-slate-500 hover:text-blue-600'}`}
+                className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors ${isFolder ? 'text-slate-700' : 'text-slate-500 hover:text-blue-600'}`}
                 style={{ paddingLeft: `${level * 12}px` }}
             >
                 <span className="w-4 h-4 flex items-center justify-center text-[10px] opacity-70 shrink-0">
@@ -68,10 +68,10 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
         const ov = node.overview || {};
 
         return (
-            <motion.div {...tabAnim} className="space-y-5">
+            <motion.div {...tabAnim} className="space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                     <div className="flex items-center gap-3">
-                        <button onClick={onClearSelection} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors border border-slate-200">←</button>
+                        <button onClick={onClearSelection} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors border border-slate-200">←</button>
                         <div>
                             <h3 className="font-bold text-sm text-slate-800 truncate max-w-[240px]">{node.name}</h3>
                             <p className="text-[10px] text-slate-500 font-mono truncate max-w-[240px]">{node.id}</p>
@@ -81,47 +81,48 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                         <div className="text-[10px] text-slate-400 uppercase font-bold mb-1">Role</div>
                         <div className="text-xs font-bold text-blue-600">{ov.role || 'Module'}</div>
                     </div>
-                    <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                         <div className="text-[10px] text-slate-400 uppercase font-bold mb-1">Structure</div>
                         <div className="text-xs font-bold text-indigo-600">{ov.structuralPosition || 'Unclassified'}</div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                         <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             Dependencies ({ov.dependencyCount || 0})
                         </h4>
                         <ul className="text-[10px] text-slate-600 truncate space-y-1">
-                            {ov.dependencies?.length ? ov.dependencies.map(d => <li key={d} className="truncate" title={d}>{d.split('/').pop()}</li>) : <li>None</li>}
+                            {ov.dependencies?.length ? ov.dependencies.map(d => <li key={d} className="truncate" title={d}>{d.split('/').pop()}</li>) : <li className="italic text-slate-400">None</li>}
                         </ul>
                     </div>
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                         <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             Dependents ({ov.dependentCount || 0})
                         </h4>
                         <ul className="text-[10px] text-slate-600 truncate space-y-1">
-                            {ov.dependents?.length ? ov.dependents.map(d => <li key={d} className="truncate" title={d}>{d.split('/').pop()}</li>) : <li>None</li>}
+                            {ov.dependents?.length ? ov.dependents.map(d => <li key={d} className="truncate" title={d}>{d.split('/').pop()}</li>) : <li className="italic text-slate-400">None</li>}
                         </ul>
                     </div>
                 </div>
 
-                <div className="space-y-3">
-                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Module Issues</h4>
+                <div className="space-y-3 pt-2">
+                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Module Issues</h4>
                     {(!node.issues || node.issues.length === 0) ? (
-                        <div className="bg-emerald-50 text-emerald-600 p-3 rounded-lg border border-emerald-100 text-[10px] flex items-center gap-2 font-medium">
-                            <span>✓</span> No structural issues found.
+                        <div className="bg-emerald-50 text-emerald-600 p-4 rounded-2xl border border-emerald-100 text-[11px] flex items-center gap-2 font-medium">
+                            <div className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center">✓</div>
+                            No structural issues found
                         </div>
                     ) : (
                         node.issues.map((issueText, i) => {
                             return (
-                                <motion.div key={i} className="bg-amber-50 border-amber-200 border rounded-xl p-3 shadow-sm">
+                                <motion.div key={i} className="bg-amber-50 border-amber-200 border rounded-2xl p-4 shadow-sm">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></div>
+                                        <div className="w-2 h-2 rounded-full bg-amber-500 shrink-0"></div>
                                         <p className="text-[11px] text-amber-700 leading-relaxed font-bold">{issueText}</p>
                                     </div>
                                 </motion.div>
@@ -140,26 +141,28 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
 
         return (
             <motion.div {...tabAnim} className="space-y-4">
-                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-                    <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3">Repository Health</h3>
+                <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm">
+                    <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4">Repository Health</h3>
                     <div className="grid grid-cols-3 gap-2 text-xs">
                         {[
                             { label: 'Files', value: response.nodes.length || 0, color: 'text-slate-800' },
                             { label: 'Edges', value: response.edges.length || 0, color: 'text-blue-600' },
                             { label: 'Issues', value: response.issues?.length || 0, color: 'text-rose-600' },
                         ].map(stat => (
-                            <div key={stat.label} className="bg-slate-50 rounded-lg p-2.5 border border-slate-100">
-                                <div className="text-slate-500 mb-0.5 text-[9px] uppercase tracking-wider font-bold">{stat.label}</div>
+                            <div key={stat.label} className="bg-slate-50 rounded-2xl p-3 border border-slate-100 flex flex-col items-center text-center">
+                                <div className="text-slate-400 mb-1 text-[9px] uppercase tracking-wider font-bold">{stat.label}</div>
                                 <div className={`text-xl font-bold tabular-nums ${stat.color}`}>{stat.value}</div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
-                    <h3 className="font-bold text-sm text-slate-800 mb-2">Code Architecture</h3>
-                    <p className="text-slate-500 mb-3 text-[10px] border-l-2 border-slate-200 pl-2 italic">Hierarchical view of the repository components.</p>
-                    <div className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden max-h-[400px] overflow-y-auto custom-scrollbar p-2">
+                <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col h-[450px]">
+                    <div className="mb-3">
+                        <h3 className="font-bold text-sm text-slate-800">Code Architecture</h3>
+                        <p className="text-slate-500 text-[10px] italic">Hierarchical view of components.</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-2xl border border-slate-200 flex-1 overflow-y-auto custom-scrollbar p-3">
                         {po.fileTree ? (
                             <FileTreeNode node={po.fileTree} onNodeClick={onIssueClick} />
                         ) : (
@@ -175,28 +178,30 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
     const renderIssues = () => (
         <motion.div {...tabAnim} className="space-y-3">
             {issues.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-slate-500 gap-3">
-                    <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 text-xl shadow-sm">✓</div>
-                    <p className="text-sm font-medium">No major issues detected</p>
-                    <p className="text-xs text-slate-400">Good structure!</p>
+                <div className="flex flex-col items-center justify-center py-20 text-slate-500 gap-4">
+                    <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 text-2xl shadow-sm border border-emerald-100">✓</div>
+                    <div className="text-center">
+                        <p className="text-sm font-bold text-slate-700">No major issues detected</p>
+                        <p className="text-xs text-slate-400 mt-1">Excellent architecture!</p>
+                    </div>
                 </div>
             ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                     {issues.map((issue, i) => {
                         const c = severityColors[issue.severity] || severityColors.LOW;
 
                         return (
                             <motion.div key={i} onClick={() => onIssueClick?.(issue.file)} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                                className={`${c.bg} ${c.border} border rounded-xl p-3.5 cursor-pointer transition-all duration-200 hover:shadow-sm`}>
-                                <div className="flex items-center justify-between mb-1.5">
+                                className={`${c.bg} ${c.border} border rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:shadow-md`}>
+                                <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
-                                        <div className={`w-1.5 h-1.5 rounded-full ${c.dot}`}></div>
+                                        <div className={`w-2 h-2 rounded-full ${c.dot}`}></div>
                                         <span className={`text-[10px] font-bold uppercase tracking-wider ${c.text}`}>{issue.type}</span>
                                     </div>
-                                    <span className={`bg-white/60 ${c.border} border px-2 py-0.5 rounded-md text-[9px] font-bold ${c.text}`}>{issue.severity}</span>
+                                    <span className={`bg-white/60 ${c.border} border px-2.5 py-0.5 rounded-full text-[9px] font-bold ${c.text}`}>{issue.severity}</span>
                                 </div>
-                                <p className="text-[11px] text-slate-700 leading-relaxed font-medium">{issue.message}</p>
-                                <p className="text-[10px] text-slate-500 mt-1.5 font-mono truncate">{issue.file}</p>
+                                <p className="text-[12px] text-slate-700 leading-relaxed font-medium mb-1.5">{issue.message}</p>
+                                <p className="text-[10px] text-slate-400 font-mono truncate bg-white/40 p-1.5 rounded-lg border border-slate-100/50">{issue.file}</p>
                             </motion.div>
                         );
                     })}
@@ -207,11 +212,11 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
 
     // ── Main Render ──
     return (
-        <div className="w-[400px] border-l border-slate-200 p-5 flex flex-col bg-white/80 backdrop-blur-md z-10 shadow-[-10px_0_30px_rgba(0,0,0,0.03)]">
-            <div className="flex bg-slate-100 border border-slate-200 rounded-xl p-1 gap-1 mb-4">
+        <div className="w-[400px] rounded-3xl shadow-xl border border-slate-200 p-6 flex flex-col bg-white shrink-0">
+            <div className="flex bg-slate-100 border border-slate-200 rounded-full p-1 gap-1 mb-5 shrink-0">
                 {tabs.map(tab => (
                     <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                        className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold transition-all duration-200 rounded-lg
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold transition-all duration-200 rounded-full
                             ${activeTab === tab.id
                                 ? 'bg-white text-blue-600 shadow-sm'
                                 : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -219,7 +224,7 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                         <span className="text-sm">{tab.icon}</span>
                         {tab.label}
                         {tab.id === 'Issues' && response?.issues?.length > 0 && (
-                            <span className="bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full text-[9px] font-bold ml-0.5">{response.issues.length}</span>
+                            <span className="bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full text-[9px] font-bold ml-1">{response.issues.length}</span>
                         )}
                     </button>
                 ))}
@@ -227,17 +232,17 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
 
             <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar min-h-0">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center h-full gap-3">
-                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: 'linear' }} className="w-8 h-8 border-2 border-slate-200 border-t-blue-600 rounded-full" />
-                        <motion.p animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1.5 }} className="text-blue-600 text-sm font-medium tracking-widest uppercase">
+                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: 'linear' }} className="w-10 h-10 border-2 border-slate-200 border-t-blue-600 rounded-full" />
+                        <motion.p animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1.5 }} className="text-blue-600 text-sm font-bold tracking-widest uppercase">
                             Analyzing...
                         </motion.p>
                     </div>
                 ) : response ? (
                     response.error ? (
-                        <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-4">
-                            <div className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 text-xl shadow-sm">✕</div>
-                            <p className="text-sm text-rose-600 font-medium">{response.error}</p>
+                        <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-4">
+                            <div className="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 text-2xl shadow-sm border border-rose-100">✕</div>
+                            <p className="text-sm text-rose-600 font-bold">{response.error}</p>
                             <p className="text-xs text-slate-500">Please check the URL or try another repository.</p>
                         </div>
                     ) : selectedNode ? (
@@ -249,10 +254,12 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                         </AnimatePresence>
                     )
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-4">
-                        <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center text-2xl text-slate-300">⬡</div>
-                        <p className="text-sm font-medium text-slate-500">No analysis data yet</p>
-                        <p className="text-xs text-slate-400 text-center px-6">Enter a GitHub URL or upload a .zip file in the left panel to start.</p>
+                    <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-5">
+                        <div className="w-20 h-20 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex items-center justify-center text-3xl text-slate-300">⬡</div>
+                        <div className="text-center px-4">
+                            <p className="text-sm font-bold text-slate-600">No analysis data yet</p>
+                            <p className="text-xs text-slate-400 mt-1">Enter a GitHub URL or upload a .zip file in the left panel to start.</p>
+                        </div>
                     </div>
                 )}
             </div>

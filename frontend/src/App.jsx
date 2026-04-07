@@ -92,7 +92,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 text-slate-800 overflow-hidden font-sans">
+    <div className="flex h-screen w-full bg-slate-100 p-4 gap-4 overflow-hidden font-sans box-border">
       <LeftPanel
         mode={mode}
         setMode={setMode}
