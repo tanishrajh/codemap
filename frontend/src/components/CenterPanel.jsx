@@ -186,11 +186,16 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
     const exportPNG = () => {
         if (!fgRef.current) return;
         const canvas = fgRef.current.getCanvasElement();
-        const link = document.createElement('a');
-        link.download = 'codemap-graph.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        setShowExport(false);
+        canvas.toBlob((blob) => {
+            if (!blob) return;
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = 'codemap-graph.png';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            setShowExport(false);
+        }, 'image/png');
     };
 
     const exportJSON = () => {
