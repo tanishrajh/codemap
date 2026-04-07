@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const severityColors = {
     HIGH: { bg: 'bg-[#FF6B6B]', border: 'border-black', text: 'text-white' },
@@ -48,6 +50,12 @@ const FileTreeNode = ({ node, level = 0, onNodeClick }) => {
 
 export default function RightPanel({ response, loading, selectedNode, onClearSelection, onIssueClick }) {
     const [activeTab, setActiveTab] = useState('Overview');
+    const [showSource, setShowSource] = useState(false);
+
+    // Reset showSource when selectedNode changes
+    useEffect(() => {
+        setShowSource(false);
+    }, [selectedNode]);
     
     const tabs = [
         { id: 'Overview', label: 'DATA' },
@@ -102,6 +110,34 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                             {ov.dependents?.length ? ov.dependents.map(d => <li key={d} className="truncate before:content-['<-'] before:mr-1 uppercase">{d.split('/').pop()}</li>) : <li className="uppercase opacity-50">Empty</li>}
                         </ul>
                     </div>
+                </div>
+
+                <div className="mt-6 border-[3px] border-black bg-white shadow-[4px_4px_0_0_#000]">
+                    <button 
+                        onClick={() => setShowSource(!showSource)}
+                        className="w-full py-3 bg-black text-white text-xs font-black uppercase hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+                    >
+                        {showSource ? 'Close Source' : 'View Source'}
+                        <span className="bg-[#F3C623] text-black px-1.5 border border-white text-[9px]">{node.extension || 'JS'}</span>
+                    </button>
+                    
+                    {showSource && (
+                        <div className="p-1 max-h-[400px] overflow-auto bg-[#1e1e1e] custom-scrollbar">
+                            <SyntaxHighlighter
+                                language={node.extension?.replace('.', '') || 'javascript'}
+                                style={vscDarkPlus}
+                                customStyle={{
+                                    margin: 0,
+                                    padding: '1rem',
+                                    fontSize: '10px',
+                                    fontFamily: 'monospace',
+                                    background: 'transparent'
+                                }}
+                            >
+                                {node.content || '// No content available'}
+                            </SyntaxHighlighter>
+                        </div>
+                    )}
                 </div>
             </div>
         );

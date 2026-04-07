@@ -93,13 +93,16 @@ exports.buildGraph = (files) => {
 
     return {
         nodes: filePaths.map(p => {
+            const fileData = files.find(f => f.path === p);
             const stats = scores.find(s => s.file === p);
             return {
                 id: p,
                 importanceLevel: stats.importanceLevel,
                 importanceScore: stats.importanceScore,
                 inDegree: stats.inDegree,
-                outDegree: stats.outDegree
+                outDegree: stats.outDegree,
+                content: fileData?.content,
+                extension: fileData?.extension
             };
         }),
         edges: uniqueEdges,
