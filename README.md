@@ -50,11 +50,16 @@ CodeMap doesn't just "look" at your code—it understands it. It builds a live d
 
 ---
 
+---
+
 ## 🏗️ **Intelligence Pipeline**
+
+![CodeMap Intelligence Workflow](docs/codemap_workflow.png)
 
 The following diagram illustrates the autonomous workflow executed during every analysis cycle:
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#F1D4D4', 'edgeColor': '#F3C623', 'tertiaryColor': '#C2EABD' }}}%%
 graph TD
     %% Phase 1: User Input & Orientation
     A["User Goal (Natural Language)"] --> B["Orientation Agent"]
@@ -81,15 +86,15 @@ graph TD
     %% Self-Healing Loop
     M -->|"User Review"| A
     
-    style A fill:#F1D4D4,stroke:#000,stroke-width:2px
-    style B fill:#F1D4D4,stroke:#000,stroke-width:2px
-    style C fill:#F1D4D4,stroke:#000,stroke-width:2px
-    style D fill:#C2EABD,stroke:#000,stroke-width:2px
-    style E fill:#C2EABD,stroke:#000,stroke-width:2px
-    style F fill:#F3C623,stroke:#000,stroke-width:2px
-    style G fill:#F3C623,stroke:#000,stroke-width:2px
-    style H fill:#F3C623,stroke:#000,stroke-width:2px
-    style I fill:#F1D4D4,stroke:#000,stroke-width:2px
+    style A fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
+    style B fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
+    style C fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
+    style D fill:#333,stroke:#C2EABD,stroke-width:2px,color:#fff
+    style E fill:#333,stroke:#C2EABD,stroke-width:2px,color:#fff
+    style F fill:#333,stroke:#F3C623,stroke-width:2px,color:#fff
+    style G fill:#333,stroke:#F3C623,stroke-width:2px,color:#fff
+    style H fill:#333,stroke:#F3C623,stroke-width:2px,color:#fff
+    style I fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
     style J fill:#EF476F,stroke:#000,stroke-width:2px,color:#fff
     style K fill:#EF476F,stroke:#000,stroke-width:2px,color:#fff
     style L fill:#1e1e1e,stroke:#fff,stroke-width:2px,color:#fff
