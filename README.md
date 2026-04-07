@@ -1,8 +1,8 @@
-# AGCIA 🧠 🛰️
+# CodeMap 🧠 🛰️
 
 ### Autonomous Goal-Driven Codebase Intelligence Agent
 
-AGCIA is a full-stack codebase analysis and visualization platform that combines **deterministic graph theory** with **LLM-powered semantic reasoning** (Google Gemini) to provide deep, actionable architectural insights for any JavaScript/TypeScript/Python repository.
+CodeMap is a full-stack codebase analysis and visualization platform that combines **deterministic graph theory** with **LLM-powered semantic reasoning** (Google Gemini) to provide deep, actionable architectural insights for any JavaScript/TypeScript/Python repository.
 
 It doesn't just lint your code — it builds a full dependency graph, classifies every file into architectural layers, detects structural anti-patterns, generates a prioritized refactoring plan, and lets you ask an AI to explain what any file actually does.
 
@@ -26,7 +26,7 @@ It doesn't just lint your code — it builds a full dependency graph, classifies
 ## 🔥 Key Features
 
 ### 1. Multi-Source Repository Ingestion
-- **GitHub Mode**: Paste any public GitHub repo URL. AGCIA downloads the ZIP archive (tries `main` branch, falls back to `master`), extracts it, and begins analysis.
+- **GitHub Mode**: Paste any public GitHub repo URL. CodeMap downloads the ZIP archive (tries `main` branch, falls back to `master`), extracts it, and begins analysis.
 - **Local Upload Mode**: Upload a `.zip` of any local project for private, offline-capable analysis.
 
 ### 2. Intelligent File Traversal & Parsing
@@ -63,7 +63,7 @@ The Insight Engine scans every node and flags structural problems:
 | **Unused / Isolated** | 🟢 LOW | In-degree = 0 (potential dead code) |
 
 ### 6. Goal-Driven Strategy System
-Users can type a natural-language goal (e.g., "optimize performance", "improve structure"). AGCIA maps keywords to one of four strategies:
+Users can type a natural-language goal (e.g., "optimize performance", "improve structure"). CodeMap maps keywords to one of four strategies:
 
 | Strategy | Keywords | Priority Issue Types |
 |----------|----------|---------------------|
@@ -88,10 +88,10 @@ priorityScore = severityScore + impactBonus + sizeBonus
 Items are sorted by `priorityScore` descending, then by severity for ties.
 
 ### 8. Recommended Starting Point Engine
-From the action plan, AGCIA identifies the **single best file** to fix first and provides 3 structural reasons why (severity level, consumer count, file size, coupling status).
+From the action plan, CodeMap identifies the **single best file** to fix first and provides 3 structural reasons why (severity level, consumer count, file size, coupling status).
 
 ### 9. Focused Re-Analysis (Agent Loop)
-AGCIA performs a **second-stage deep inspection** on the top 2 most critical files from the action plan:
+CodeMap performs a **second-stage deep inspection** on the top 2 most critical files from the action plan:
 - Checks for bidirectional coupling patterns.
 - Detects violation of Single Responsibility Principle.
 - Flags oversized files with category-specific advice (e.g., "Move state management outside UI components").
@@ -117,7 +117,7 @@ Advanced semantic reasoning features, lazy-loaded and context-aware:
 All features include **dynamic, context-aware fallbacks** and a **Self-Healing Resilience** system (automatic exponential backoff for API 429 quota limits).
 
 ### 12. 🤖 Agentic Behavior & Autonomous Loop
-AGCIA operates as a **dynamic agent**, not just a static script. Its analysis follows an autonomous loop inspired by the OODA (Observe, Orient, Decide, Act) cycle:
+CodeMap operates as a **dynamic agent**, not just a static script. Its analysis follows an autonomous loop inspired by the OODA (Observe, Orient, Decide, Act) cycle:
 
 1.  **Autonomous Orientation**: The **Planner Agent** interprets your natural language goal (e.g., "optimize for speed") and dynamically weights the entire analysis engine to focus on relevant anti-patterns.
 2.  **Multi-Stage Pipeline**:
@@ -203,7 +203,7 @@ A streamlined 3-tab interface designed for high-impact decision making:
 ## 📁 Project Structure
 
 ```
-AGCIA/
+CodeMap/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/      # Route logic for analysis & AI
@@ -331,8 +331,8 @@ Returns: `{ "explanation": "..." }`
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/tanishrajh/AGCIA.git
-cd AGCIA
+git clone https://github.com/tanishrajh/CodeMap.git
+cd CodeMap
 ```
 
 ### 2. Backend Setup
@@ -398,7 +398,7 @@ Click a node in the graph → scroll down in the right panel → click **"Examin
 | 429 Too Many Requests | Gemini free-tier rate limit (15 RPM) | Wait 60 seconds between rapid "Examine Purpose" clicks |
 | Backend won't start on port 3000 | Port already in use | Run `npx kill-port 3000` or change `PORT` in `.env` |
 | GitHub repo fails to download | Repo is private or URL is invalid | Use "Local Upload" mode instead, or check the URL |
-| Graph is empty after analysis | Repo has no supported file types | AGCIA supports `.js`, `.ts`, `.jsx`, `.tsx`, `.py`, `.json` |
+| Graph is empty after analysis | Repo has no supported file types | CodeMap supports `.js`, `.ts`, `.jsx`, `.tsx`, `.py`, `.json` |
 
 ---
 
