@@ -258,8 +258,23 @@ The UI is a **3-panel layout** filling the full viewport:
 | **Issues** | All detected issues sorted by severity, each expandable with AI explanation |
 | **Action Plan** | Prioritized refactoring list with severity badges, impact counts, and AI refactoring advice |
 | **Focused** | Deep-dive observations and suggestions for the top 2 critical files |
-| **Improvements** | Aggregated improvement suggestions |
-| **Node Detail** | Appears when clicking a graph node — shows file metrics, category, impact level, and "Examine Purpose ✨" button for AI module intelligence |
+| **Node Detail** | Appears when clicking a graph node — shows file metrics, category, impact level, and **Source Code Viewer** with AI module intelligence. |
+
+### 16. Circular Dependency Detective 🔄
+- **DFS-Based Analysis**: Automatically detects import loops (e.g., A → B → A) that cause architectural rot.
+- **Path Chain Visualization**: Displays the exact loop sequence in the **BUGS** tab.
+- **High Severity Flagging**: Marks cycles as critical structural risks.
+
+### 17. Smart Search & Jump 🔍
+- **Real-time Autocomplete**: Search for any file in the repository via a Neobrutalist search bar.
+- **Cinematic Navigation**: Smoothly **Pans and Zooms** the graph to center the selected file instantly.
+- **Auto-Focuser**: Selecting a search result automatically updates all intelligence dashboards for that file.
+
+### 18. Dependency Export 📤
+- **Snapshot Support**: Download high-quality PNG images of your dependency graphs (currently under refinement).
+- **Data Portability**: Export full analysis reports as **JSON** for sharing or archival.
+- **Issue Tracking**: Export the architectural bugs ledger as a **CSV** for spreadsheet or Jira tracking.
+- **Context-Aware UI**: Floating Neobrutalist export menu in the bottom-left corner.
 
 ### State Management
 All state lives in `App.jsx` and is passed via props:
