@@ -64,7 +64,10 @@ function App() {
     setSelectedNode(null);
 
     const formData = new FormData();
-    if (mode === 'github') formData.append('url', repoUrl);
+    formData.append('type', mode);
+    formData.append('goal', 'Improve codebase health'); 
+
+    if (mode === 'github') formData.append('repoUrl', repoUrl);
     else formData.append('file', file);
 
     const data = await processRepository(formData);
