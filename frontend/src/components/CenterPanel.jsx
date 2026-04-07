@@ -9,6 +9,7 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
     const [legendOpen, setLegendOpen] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showExport, setShowExport] = useState(false);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -182,6 +183,43 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
         ? nodes.filter(n => n.id.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 5)
         : [];
 
+    const exportPNG = () => {
+        if (!fgRef.current) return;
+        const canvas = fgRef.current.getCanvasElement();
+        const link = document.createElement('a');
+        link.download = 'codemap-graph.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        setShowExport(false);
+    };
+
+    const exportJSON = () => {
+        const blob = new Blob([JSON.stringify(response, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = 'codemap-analysis.json';
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+        setShowExport(false);
+    };
+
+    const exportCSV = () => {
+        if (!response.issues?.length) return;
+        const headers = 'File,Issue,Severity,Type\n';
+        const rows = response.issues.map(iss => 
+            `"${iss.file}","${iss.message.replace(/"/g, '""')}","${iss.severity}","${iss.type}"`
+        ).join('\n');
+        const blob = new Blob([headers + rows], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = 'codemap-issues.csv';
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+        setShowExport(false);
+    };
+
     return (
         <div className="flex-1 overflow-hidden relative bg-white border-[4px] border-black shadow-[8px_8px_0_0_#000]" ref={containerRef}>
             <motion.div initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="w-full h-full">
@@ -276,6 +314,40 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
                         )}
                     </AnimatePresence>
                 </div>
+            </div>
+
+            {/* Export Menu */}
+            <div className="absolute bottom-5 left-5 z-20 font-mono">
+                <button 
+                    onClick={() => setShowExport(!showExport)}
+                    className="bg-[#EF476F] border-[3px] border-black px-4 py-2 shadow-[4px_4px_0_0_#000] text-white font-black uppercase hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0_0_#000] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all flex items-center gap-2"
+                >
+                    EXPORT <span className="text-[10px]">{showExport ? '▼' : '▲'}</span>
+                </button>
+                <AnimatePresence>
+                    {showExport && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                            className="absolute bottom-full left-0 mb-3 w-48 bg-white border-[3px] border-black shadow-[4px_4px_0_0_#000] p-1"
+                        >
+                            {[
+                                { label: 'Graph Image (PNG)', action: exportPNG, icon: '🖼️' },
+                                { label: 'Analysis (JSON)', action: exportJSON, icon: '📄' },
+                                { label: 'Bugs List (CSV)', action: exportCSV, icon: '📊', disabled: !response.issues?.length }
+                            ].map((btn, idx) => (
+                                <button 
+                                    key={idx} 
+                                    onClick={btn.action}
+                                    disabled={btn.disabled}
+                                    className={`w-full p-2 text-[10px] font-black uppercase border-b-2 border-black last:border-0 text-left hover:bg-black hover:text-white transition-colors flex items-center gap-2
+                                        ${btn.disabled ? 'opacity-30 cursor-not-allowed' : ''}`}
+                                >
+                                    <span>{btn.icon}</span> {btn.label}
+                                </button>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );
