@@ -56,7 +56,7 @@ exports.analyze = async (req, res) => {
 
         // Phase 5: Insight Engine
         console.log('[Critic] Computing rule-based insights...');
-        const insightData = insightService.analyze(graphData.nodes, graphData.edges, files);
+        const insightData = insightService.analyze(graphData.nodes, graphData.edges, files, graphData.cycles);
 
         const cleanFiles = files.map(f => ({
             path: f.path,

@@ -91,7 +91,7 @@ exports.buildGraph = (files) => {
         }
     });
 
-    return {
+    const graph = {
         nodes: filePaths.map(p => {
             const fileData = files.find(f => f.path === p);
             const stats = scores.find(s => s.file === p);
@@ -106,6 +106,49 @@ exports.buildGraph = (files) => {
             };
         }),
         edges: uniqueEdges,
-        coreModules
+        coreModules,
+        cycles: findCycles(filePaths, uniqueEdges)
     };
+
+    return graph;
 };
+
+function findCycles(nodeIds, edges) {
+    const adj = new Map();
+    nodeIds.forEach(id => adj.set(id, []));
+    edges.forEach(e => {
+        if (adj.has(e.source)) adj.get(e.source).push(e.target);
+    });
+
+    const cycles = [];
+    const visited = new Set();
+    const stack = new Set();
+    const path = [];
+
+    function dfs(node) {
+        visited.add(node);
+        stack.add(node);
+        path.push(node);
+
+        const neighbors = adj.get(node) || [];
+        for (const neighbor of neighbors) {
+            if (stack.has(neighbor)) {
+                const cycleStartIdx = path.indexOf(neighbor);
+                if (cycleStartIdx !== -1) {
+                    cycles.push([...path.slice(cycleStartIdx), neighbor]);
+                }
+            } else if (!visited.has(neighbor)) {
+                dfs(neighbor);
+            }
+        }
+
+        stack.delete(node);
+        path.pop();
+    }
+
+    nodeIds.forEach(id => {
+        if (!visited.has(id)) dfs(id);
+    });
+
+    return cycles;
+}

@@ -196,6 +196,18 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                                 <span className="text-[10px] font-black uppercase underline decoration-2 underline-offset-2">{issue.severity}</span>
                             </div>
                             <p className="text-[11px] font-bold leading-tight mb-2">{issue.message}</p>
+                            
+                            {issue.isCycle && issue.cycleArr && (
+                                <div className="mt-3 mb-3 bg-white border-2 border-dashed border-black p-2 font-mono text-[9px] text-black">
+                                    {issue.cycleArr.map((p, idx) => (
+                                        <span key={idx}>
+                                            {p.split('/').pop()}
+                                            {idx < issue.cycleArr.length - 1 && <span className="mx-1 font-black text-[#EF476F]">→</span>}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+
                             <p className="text-[9px] font-black uppercase bg-white text-black border-2 border-black px-1.5 py-1 truncate">{issue.file}</p>
                         </div>
                     );

@@ -1,6 +1,6 @@
 const path = require('path');
 
-exports.analyze = (nodes, edges, files) => {
+exports.analyze = (nodes, edges, files, cycles = []) => {
     const globalIssues = [];
     const transformedNodes = [];
 
@@ -94,6 +94,20 @@ exports.analyze = (nodes, edges, files) => {
             ...node,
             overview,
             issues: nodeIssues
+        });
+    });
+
+    // 6. Circular Dependency Detection
+    cycles.forEach(cycle => {
+        const cycleStr = cycle.map(p => path.basename(p)).join(' -> ');
+        globalIssues.push({
+            file: cycle[0], // Attribute to the first file in the cycle
+            message: `Circular dependency detected: ${cycleStr}`,
+            type: 'Circular Dependency',
+            severity: 'HIGH',
+            goalRelevant: false,
+            isCycle: true,
+            cycleArr: cycle
         });
     });
 
