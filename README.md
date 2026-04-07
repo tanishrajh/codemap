@@ -52,7 +52,51 @@ CodeMap doesn't just "look" at your code—it understands it. It builds a live d
 
 ## 🏗️ **Intelligence Pipeline**
 
-CodeMap executes a **7-stage autonomous loop** during every analysis:
+The following diagram illustrates the autonomous workflow executed during every analysis cycle:
+
+```mermaid
+graph TD
+    %% Phase 1: User Input & Orientation
+    A["User Goal (Natural Language)"] --> B["Orientation Agent"]
+    B -->|"Strategy Selection"| C{"Strategy: Performance / Structure / Quality / General"}
+
+    %% Phase 2: Ingestion
+    C --> D["Ingestion Engine"]
+    D -->|"Extract"| E["Source Archive (GitHub / Local)"]
+
+    %% Phase 3 & 4: Analysis
+    E --> F["File Traversal & Parsing"]
+    F -->|"Regex Scanning"| G["Dependency Graph Construction"]
+    G -->|"In-Degree / Out-Degree"| H["Importance & Role Classification"]
+
+    %% Phase 5 & 6: Intelligence
+    H --> I["Architecture Layering"]
+    I --> J["Structural Critic Engine"]
+    J -->|"Identify Cycles / Coupling / Complexity"| K["Prioritized Insight Index"]
+
+    %% Phase 7: Reporting
+    K --> L["Intelligence Dashboard (Frontend)"]
+    L --> M["Interactive Force Graph / Action Plan / Bug Ledger"]
+
+    %% Self-Healing Loop
+    M -->|"User Review"| A
+    
+    style A fill:#F1D4D4,stroke:#000,stroke-width:2px
+    style B fill:#F1D4D4,stroke:#000,stroke-width:2px
+    style C fill:#F1D4D4,stroke:#000,stroke-width:2px
+    style D fill:#C2EABD,stroke:#000,stroke-width:2px
+    style E fill:#C2EABD,stroke:#000,stroke-width:2px
+    style F fill:#F3C623,stroke:#000,stroke-width:2px
+    style G fill:#F3C623,stroke:#000,stroke-width:2px
+    style H fill:#F3C623,stroke:#000,stroke-width:2px
+    style I fill:#F1D4D4,stroke:#000,stroke-width:2px
+    style J fill:#EF476F,stroke:#000,stroke-width:2px,color:#fff
+    style K fill:#EF476F,stroke:#000,stroke-width:2px,color:#fff
+    style L fill:#1e1e1e,stroke:#fff,stroke-width:2px,color:#fff
+    style M fill:#1e1e1e,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+### **The 7-Stage Autonomous Loop**
 
 1. **Orientation**: Interprets your "Analysis Goal" to tune the heuristic engine.
 2. **Ingestion**: Securely downloads and extracts the repository source.
