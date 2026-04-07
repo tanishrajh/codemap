@@ -393,4 +393,4 @@ ISC
 
 ---
 
-*Built to make codebases readable again.* 🚀
+*Built to make codebases readable again.* 
