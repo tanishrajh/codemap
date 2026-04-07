@@ -92,7 +92,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-zinc-950 text-zinc-100 overflow-hidden font-sans">
+    <div className="flex h-screen w-full bg-slate-50 text-slate-800 overflow-hidden font-sans">
       <LeftPanel
         mode={mode}
         setMode={setMode}
@@ -103,7 +103,6 @@ function App() {
         onAnalyze={handleAnalyze}
         loading={loading}
         analysisComplete={!!response && !response.error}
-        strategy={response?.strategy || null}
         history={history}
         onHistorySelect={handleHistorySelect}
         onClearHistory={handleClearHistory}
