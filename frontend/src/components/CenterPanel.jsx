@@ -183,21 +183,6 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
         ? nodes.filter(n => n.id.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 5)
         : [];
 
-    const exportPNG = () => {
-        if (!fgRef.current) return;
-        const canvas = fgRef.current.getCanvasElement();
-        canvas.toBlob((blob) => {
-            if (!blob) return;
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.download = 'codemap-graph.png';
-            link.href = url;
-            link.click();
-            URL.revokeObjectURL(url);
-            setShowExport(false);
-        }, 'image/png');
-    };
-
     const exportJSON = () => {
         const blob = new Blob([JSON.stringify(response, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -336,7 +321,6 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
                             className="absolute bottom-full left-0 mb-3 w-48 bg-white border-[3px] border-black shadow-[4px_4px_0_0_#000] p-1"
                         >
                             {[
-                                { label: 'Graph Image (PNG)', action: exportPNG, icon: '🖼️' },
                                 { label: 'Analysis (JSON)', action: exportJSON, icon: '📄' },
                                 { label: 'Bugs List (CSV)', action: exportCSV, icon: '📊', disabled: !response.issues?.length }
                             ].map((btn, idx) => (
