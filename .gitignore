@@ -1,0 +1,13 @@
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+backend/uploads/
+*.log
+backend/dev.log
+backend/npm_log.txt
+backend/test.js
+backend/testrepo.zip
+.env
+.DS_Store
+dist/
+build/

@@ -1,0 +1,9 @@
+{
+    "ignore": [
+        "uploads/*",
+        "uploads/extracted/*",
+        "test.zip",
+        "testrepo.zip",
+        "test.js"
+    ]
+}
