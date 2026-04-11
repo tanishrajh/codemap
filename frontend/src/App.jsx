@@ -65,7 +65,6 @@ function App() {
 
     const formData = new FormData();
     formData.append('type', mode);
-    formData.append('goal', 'Improve codebase health'); 
 
     if (mode === 'github') formData.append('repoUrl', repoUrl);
     else formData.append('file', file);

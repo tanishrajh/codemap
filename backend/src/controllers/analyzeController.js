@@ -3,22 +3,14 @@ const fileService = require('../services/fileService');
 const graphService = require('../services/graphService');
 const classificationService = require('../services/classificationService');
 const insightService = require('../services/insightService');
-const strategyService = require('../services/strategyService');
 const overviewService = require('../services/overviewService');
-
-let lastAnalyzedPath = '';
 
 exports.analyze = async (req, res) => {
     console.log('Received analysis request.');
-    const { type, goal } = req.body;
+    const { type } = req.body;
 
     try {
-        // Phase 1: Strategy
-        console.log('[Planner] Interpreting goal...');
-        const strategy = strategyService.getStrategy(goal);
-        console.log(`[Planner] Strategy: ${strategy.type} — ${strategy.description}`);
-
-        // Phase 2: Ingestion
+        // Phase 1: Ingestion
         let extractedPath = '';
 
         if (type === 'local') {
@@ -41,28 +33,20 @@ exports.analyze = async (req, res) => {
             return res.status(400).json({ error: "Invalid type. Must be 'github' or 'local'." });
         }
 
-        lastAnalyzedPath = extractedPath;
-
-        // Phase 3: File Traversal
+        // Phase 2: File Traversal
         console.log('[Parser] Traversing files...');
         const traverseResult = fileService.traverseDirectory(extractedPath);
         const files = traverseResult.files || [];
         const readme = traverseResult.readme;
 
-        // Phase 4: Graph + Classification
+        // Phase 3: Graph + Classification
         console.log('[Analyzer] Building dependency graph...');
         const graphData = graphService.buildGraph(files);
         graphData.nodes = classificationService.classifyNodes(graphData.nodes);
 
-        // Phase 5: Insight Engine
+        // Phase 4: Insight Engine
         console.log('[Critic] Computing rule-based insights...');
         const insightData = insightService.analyze(graphData.nodes, graphData.edges, files, graphData.cycles);
-
-        const cleanFiles = files.map(f => ({
-            path: f.path,
-            extension: f.extension,
-            size: f.size
-        }));
 
         console.log('[Reporter] Compiling final report...');
 
@@ -83,11 +67,6 @@ exports.analyze = async (req, res) => {
             nodes: insightData.nodes,
             edges: graphData.edges,
             issues: insightData.globalIssues,
-            insights: [], // Removed legacy insights
-            improvements: [], // Removed legacy improvements
-            actionPlan: [], // Removed
-            startingPoint: null, // Removed
-            focusedAnalysis: [], // Removed
             projectOverview,
         });
 

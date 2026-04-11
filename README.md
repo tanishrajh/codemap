@@ -1,174 +1,112 @@
 # CodeMap 🧠 🛰️
 
-### **Autonomous Codebase Intelligence & Architectural Visualization Engine**
+### **Deterministic Codebase Analysis & Architectural Visualization Engine**
 
-CodeMap is a high-performance analysis platform that transforms raw source code into an interactive, 31st-century intelligence dashboard. By combining **deterministic graph theory** with **semantic AI reasoning**, CodeMap identifies structural rot, detects circular dependencies, and provides actionable refactoring strategies for modern engineering teams.
+CodeMap is a high-performance analysis platform that transforms raw source code into an interactive dependency map. It uses **Graph Theory** and **Static Analysis** to identify structural rot, detect circular dependencies, and provide a clear bird's-eye view of any JavaScript, TypeScript, or Python project.
 
-> "Making complex codebases readable, navigable, and maintainable again."
+**No AI, No API Keys, No Latency. Just pure structural code intelligence.**
 
 ---
 
 ## 📑 **Executive Summary**
-CodeMap doesn't just "look" at your code—it understands it. It builds a live dependency map, classifies modules into architectural layers, and acts as an autonomous agent that deep-dives into your project's most critical files to explain their purpose and risk.
+CodeMap builds a live dependency graph and classifies modules into architectural layers. It is designed for developers who need to understand a new codebase instantly or identify critical technical debt in existing projects.
 
-- [Key Features](#-core-intelligence-features)
-- [Intelligence Pipeline](#-intelligence-pipeline)
-- [Tech Stack](#-the-tech-stack)
-- [Getting Started](#-getting-started)
-- [How To Use](#-how-to-use)
+- **[Core Features](#-core-features)**
+- **[Intelligence Pipeline](#-intelligence-pipeline)**
+- **[Tech Stack](#-the-tech-stack)**
+- **[Setup Guide](#-setup-guide)**
 
 ---
 
-## 🔥 **Core Intelligence Features**
+## 🔥 **Core Features**
 
 ### 1. 📂 **Multi-Source Ingestion**
 - **GitHub Sync**: Analyze any public repository instantly via URL.
-- **Local Workspace**: Securely upload `.zip` archives for private, offline-first analysis.
+- **Local Workspace**: Securely upload `.zip` archives for private, offline analysis.
 
 ### 2. 🕸️ **Deterministic Dependency Mapping**
-- **Regex-Powered Parsing**: Deep scanning for `import`, `require`, and dynamic dependency patterns.
-- **Node Centrality**: Automatically identifies the "Core Modules" that hold your system together.
+- **Deep Scanning**: Maps `import`, `require`, and dynamic dependency patterns.
 - **Relationship Analysis**: Computes In-Degree (Impact) and Out-Degree (Complexity) for every single file.
+- **Centrality Detection**: Identifies the "Core Modules" that the rest of your system depends on.
 
-### 3. 🔍 **Smart Search & Cinematic Navigation**
-- **Real-time Autocomplete**: Find any module across thousands of lines of code.
-- **Jump-to-File**: Seamlessly pans and zooms the 2D graph to center and highlight your selection.
+### 3. 🔍 **Smart Search & Jump**
+- **Real-time Autocomplete**: Find any module across thousands of files instantly.
+- **Cinematic Zoom**: Seamlessly pans and zooms the 2D graph to highlight your selection.
 
 ### 4. 🔄 **Circular Dependency Detective**
-- **Cycle Discovery**: Uses DFS algorithms to identify recursive import loops that cause memory leaks and build failures.
-- **Path Visualization**: See the exact chain of files involved in the structural loop.
+- **Cycle Discovery**: Identifies recursive import loops (A → B → A) that cause memory leaks and runtime issues.
+- **Visual Chains**: See the exact path of files involved in a structural loop in the **BUGS** tab.
 
-### 5. 🤖 **AI-Powered Semantic Layer (Gemini 2.0 Flash)**
-- **Project Essence**: Automated high-level summarization of the repository's value proposition.
-- **Module Intelligence**: "Examine Purpose" reads raw source code to explain a file's role in plain language.
-- **Refactoring Strategy**: Generates a prioritized plan to pay down technical debt.
-
-### 6. 📤 **Professional Export Suite**
-- **Data Portability**: Export your entire analysis (nodes, edges, metrics) as **JSON**.
-- **Issue Tracking**: Download your architectural bug ledger as a **CSV** for Jira or spreadsheet tracking.
-- **Neobrutalist UI**: A dedicated, high-contrast export menu for rapid reporting.
-
----
+### 5. 📤 **Professional Export Suite**
+- **JSON Data**: Export your entire analysis (nodes, edges, metrics) for archival.
+- **CSV Ledger**: Download your architectural bug list for Jira or spreadsheet tracking.
 
 ---
 
 ## 🏗️ **Intelligence Pipeline**
 
-![CodeMap Intelligence Workflow](docs/codemap_workflow.png)
+CodeMap executes a **6-stage autonomous loop** during every analysis:
 
-The following diagram illustrates the autonomous workflow executed during every analysis cycle:
-
-```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#F1D4D4', 'edgeColor': '#F3C623', 'tertiaryColor': '#C2EABD' }}}%%
-graph TD
-    %% Phase 1: User Input & Orientation
-    A["User Goal (Natural Language)"] --> B["Orientation Agent"]
-    B -->|"Strategy Selection"| C{"Strategy: Performance / Structure / Quality / General"}
-
-    %% Phase 2: Ingestion
-    C --> D["Ingestion Engine"]
-    D -->|"Extract"| E["Source Archive (GitHub / Local)"]
-
-    %% Phase 3 & 4: Analysis
-    E --> F["File Traversal & Parsing"]
-    F -->|"Regex Scanning"| G["Dependency Graph Construction"]
-    G -->|"In-Degree / Out-Degree"| H["Importance & Role Classification"]
-
-    %% Phase 5 & 6: Intelligence
-    H --> I["Architecture Layering"]
-    I --> J["Structural Critic Engine"]
-    J -->|"Identify Cycles / Coupling / Complexity"| K["Prioritized Insight Index"]
-
-    %% Phase 7: Reporting
-    K --> L["Intelligence Dashboard (Frontend)"]
-    L --> M["Interactive Force Graph / Action Plan / Bug Ledger"]
-
-    %% Self-Healing Loop
-    M -->|"User Review"| A
-    
-    style A fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
-    style B fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
-    style C fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
-    style D fill:#333,stroke:#C2EABD,stroke-width:2px,color:#fff
-    style E fill:#333,stroke:#C2EABD,stroke-width:2px,color:#fff
-    style F fill:#333,stroke:#F3C623,stroke-width:2px,color:#fff
-    style G fill:#333,stroke:#F3C623,stroke-width:2px,color:#fff
-    style H fill:#333,stroke:#F3C623,stroke-width:2px,color:#fff
-    style I fill:#333,stroke:#F1D4D4,stroke-width:2px,color:#fff
-    style J fill:#EF476F,stroke:#000,stroke-width:2px,color:#fff
-    style K fill:#EF476F,stroke:#000,stroke-width:2px,color:#fff
-    style L fill:#1e1e1e,stroke:#fff,stroke-width:2px,color:#fff
-    style M fill:#1e1e1e,stroke:#fff,stroke-width:2px,color:#fff
-```
-
-### **The 7-Stage Autonomous Loop**
-
-1. **Orientation**: Interprets your "Analysis Goal" to tune the heuristic engine.
-2. **Ingestion**: Securely downloads and extracts the repository source.
-3. **Traversal**: Recursively walks the tree, prioritizing code over noise (`node_modules`, etc.).
-4. **Logic Graph**: Builds the directed edges and calculates node importance.
-5. **Categorization**: Classifies files into UI, Backend, Logic, Utility, or Config layers.
-6. **Critic Engine**: Scans for 5+ structural anti-patterns and performance bottlenecks.
-7. **Reporting**: Compiles the interactive dashboard and prioritized "Action Plan."
+1. **Ingestion**: Securely downloads and extracts the repository source.
+2. **Traversal**: Recursively walks the tree, prioritizing code over noise (`node_modules`, etc.).
+3. **Logic Graph**: Builds directed edges and calculates node importance based on imports.
+4. **Categorization**: Classifies modules into **UI**, **Backend**, **Logic**, **Utility**, or **Config** layers.
+5. **Critic Engine**: Scans for structural anti-patterns, complexity hotspots, and cycles.
+6. **Reporting**: Compiles the interactive dashboard and interactive file tree.
 
 ---
 
 ## 🛠️ **The Tech Stack**
 
-### **The Frontend (Visual Excellence)**
-- **React 19** + **Vite 8**: Ultra-fast hot reloading and state management.
-- **Tailwind CSS 3**: Utility-first styling for the Neobrutalist design system.
-- **react-force-graph-2d**: D3-powered physics simulation for large-scale graphs.
-- **Framer Motion 12**: Smooth, cinematic UI transitions.
+### **The Frontend (Visuals)**
+- **React 19** + **Vite 8**: Ultra-fast hot-reloading dashboard.
+- **Tailwind CSS 3**: Neobrutalist design system with high-contrast styling.
+- **react-force-graph-2d**: D3-powered physics simulation.
 
-### **The Backend (Core Engine)**
+### **The Backend (Engine)**
 - **Node.js 18+** + **Express 4**: Robust API orchestration.
-- **Axios**: Intelligent API communication with self-healing retries.
 - **AdmZip**: High-speed local archive processing.
-- **Google Gemini 2.0**: The "brain" behind the semantic reasoning features.
+- **Axios**: Intelligent fetching for GitHub repository ingestion.
 
 ---
 
-## 🚀 **Getting Started**
+## 🚀 **Setup Guide**
 
-### **1. Clone & Install**
+Follow these steps to run CodeMap locally. **Note: No API keys or `.env` files are required.**
+
+### **1. Clone the Repository**
 ```bash
 git clone https://github.com/tanishrajh/CodeMap.git
 cd CodeMap
 ```
 
-### **2. Configure Backend**
-Create a `backend/.env` file:
-```env
-GEMINI_API_KEY=your_google_ai_studio_key
-PORT=3000
-```
+### **2. Start the Backend**
+The backend serves the analysis engine and repository parser.
 ```bash
-cd backend && npm install && npm run dev
+cd backend
+npm install
+npm run dev
 ```
+*The server will run on `http://localhost:3000`.*
 
-### **3. Launch Presentation**
+### **3. Start the Frontend**
+Open a **new terminal window** to run the dashboard.
 ```bash
-cd frontend && npm install && npm run dev
+cd frontend
+npm install
+npm run dev
 ```
-Open `http://localhost:5173` to begin your architectural journey.
+*The dashboard will run on `http://localhost:5173`.*
+
+### **4. Access CodeMap**
+Open your browser and navigate to:
+**[http://localhost:5173](http://localhost:5173)**
 
 ---
 
 ## 💡 **How To Use**
 
 1. **Connect**: Input a GitHub URL or upload a ZIP.
-2. **Target**: Optional—tell the agent to focus on `"performance"` or `"structure"`.
-3. **Explore**: Use the 2D physics graph to find "spaghetti" clusters.
-4. **Inspect**: Click a node to see its details in the right side panel.
-5. **Solve**: Use the **Action Plan** tab to see the most critical files to refactor first.
-6. **Export**: Save your findings to share with the engineering team.
-
-### Examine Any File's Purpose
-Click a node in the graph → scroll down in the right panel → click **"Examine Purpose ✨"** → the AI reads the file's code and explains what it does, its role, and how it interacts with the rest of the system.
-
----
-
 ## 🛠️ Troubleshooting
 
 | Problem | Cause | Solution |
