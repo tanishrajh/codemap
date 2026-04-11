@@ -34,14 +34,19 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
         if (node.x === undefined || node.y === undefined) return;
 
         let opacity = 1.0;
+        let sizeMultiplier = 1.0;
+
         if (selectedNode) {
-            if (node.id === selectedNode) { opacity = 1.0; }
-            else {
+            if (node.id === selectedNode) { 
+                opacity = 1.0; 
+                sizeMultiplier = 1.3; // Extra pop for the pivot node
+            } else {
                 const isNeighbor = response?.edges?.some(e =>
                     (e.source === selectedNode && e.target === node.id) || (e.target === selectedNode && e.source === node.id) ||
                     (e.source?.id === selectedNode && e.target?.id === node.id) || (e.target?.id === selectedNode && e.source?.id === node.id)
                 );
-                opacity = isNeighbor ? 1.0 : 0.12;
+                opacity = isNeighbor ? 1.0 : 0.05; // Aggressive fade
+                sizeMultiplier = isNeighbor ? 1.15 : 1.0;
             }
         } else if (node.importanceLevel === 'LOW') { opacity = 0.35; }
 
@@ -59,6 +64,8 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
         if (node.importanceLevel === 'HIGH') { size = 12; hasGlow = true; }
         else if (node.importanceLevel === 'MEDIUM') { size = 7; }
         else if (node.importanceLevel === 'LOW') { size = 3; }
+
+        size *= sizeMultiplier;
 
         if (selectedNode === node.id) {
             ctx.globalAlpha = 1.0;
