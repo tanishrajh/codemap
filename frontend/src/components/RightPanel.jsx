@@ -107,15 +107,43 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                     </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex gap-2">
                     <button 
                         onClick={onOpenSource}
-                        className="w-full py-4 bg-[#F3C623] border-[3px] border-black text-black text-[11px] font-black uppercase hover:-translate-y-1 hover:-translate-x-1 shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all flex items-center justify-center gap-3 group"
+                        className="flex-1 py-4 bg-[#F3C623] border-[3px] border-black text-black text-[11px] font-black uppercase hover:-translate-y-1 hover:-translate-x-1 shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all flex items-center justify-center gap-3 group"
                     >
-                        🔍 VIEW SOURCE CODE
+                        🔍 VIEW SOURCE
                         <span className="bg-black text-white px-1.5 border border-white text-[9px] group-hover:bg-[#EF476F] transition-colors">{node.extension || 'JS'}</span>
                     </button>
-                    <p className="text-[8px] font-bold text-center mt-2 opacity-50 uppercase tracking-widest">Connect to Bridge Drawer</p>
+                    <button 
+                         onClick={() => {
+                             const bestNext = response.nodes
+                                 .filter(n => ov.dependencies?.includes(n.id))
+                                 .sort((a,b) => b.importanceScore - a.importanceScore)[0];
+                             if (bestNext) onIssueClick(bestNext.id);
+                         }}
+                         disabled={!ov.dependencies?.length}
+                         className="px-4 bg-white border-[3px] border-black text-black text-[11px] font-black uppercase hover:-translate-y-1 hover:-translate-x-1 shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all flex items-center justify-center disabled:opacity-30 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0_0_#000]"
+                         title="Follow flow to next important module"
+                    >
+                        NEXT ↱
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-2 mt-2">
+                     <button 
+                         onClick={() => {
+                             const bestPrev = response.nodes
+                                 .filter(n => ov.dependents?.includes(n.id))
+                                 .sort((a,b) => b.importanceScore - a.importanceScore)[0];
+                             if (bestPrev) onIssueClick(bestPrev.id);
+                         }}
+                         disabled={!ov.dependents?.length}
+                         className="flex-1 py-2 bg-white border-[3px] border-black text-black text-[10px] font-black uppercase hover:-translate-y-0.5 hover:-translate-x-0.5 shadow-[3px_3px_0_0_#000] hover:shadow-[5px_5px_0_0_#000] transition-all disabled:opacity-30"
+                    >
+                        ↰ PREV STEP
+                    </button>
+                    <p className="text-[8px] font-bold opacity-40 uppercase tracking-tighter">Flow Navigation</p>
                 </div>
             </div>
         );
@@ -123,23 +151,33 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
 
     const renderOverview = () => {
         const po = response.projectOverview;
+        const vitals = response.vitals || {};
         if (!po) return null;
 
         return (
             <div className="space-y-5 h-full flex flex-col">
                 <div className="bg-white border-[3px] border-black p-4 shadow-[4px_4px_0_0_#000]">
-                    <h3 className="text-[12px] font-black uppercase bg-black text-white inline-block px-2 mb-3">Metrics</h3>
-                    <div className="grid grid-cols-3 gap-3">
-                        {[
-                            { label: 'NODES', value: response.nodes.length || 0, bg: 'bg-[#C2EABD]' },
-                            { label: 'LINKS', value: response.edges.length || 0, bg: 'bg-[#118AB2]', text: 'text-white' },
-                            { label: 'BUGS', value: response.issues?.length || 0, bg: 'bg-[#FF6B6B]', text: 'text-white' },
-                        ].map(stat => (
-                            <div key={stat.label} className={`${stat.bg} ${stat.text || 'text-black'} border-[3px] border-black p-2 flex flex-col items-center shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all`}>
-                                <div className="text-[9px] font-black uppercase tracking-widest">{stat.label}</div>
-                                <div className="text-xl font-black">{stat.value}</div>
-                            </div>
-                        ))}
+                    <h3 className="text-[11px] font-black uppercase bg-black text-white inline-block px-2 mb-3 tracking-widest">Repository Vitals</h3>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="bg-[#C2EABD] border-[3px] border-black p-2 shadow-[2px_2px_0_0_#000]">
+                            <div className="text-[8px] font-black uppercase opacity-60">Breadth (Files)</div>
+                            <div className="text-lg font-black">{vitals.totalFiles || 0}</div>
+                        </div>
+                        <div className="bg-[#118AB2] text-white border-[3px] border-black p-2 shadow-[2px_2px_0_0_#000]">
+                            <div className="text-[8px] font-black uppercase opacity-80">Modular Density</div>
+                            <div className="text-lg font-black">{vitals.density || 0}</div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="bg-black text-white p-2 border-2 border-black flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase">👑 God Object</span>
+                            <span className="text-[10px] font-bold truncate max-w-[150px]">{vitals.godObject || 'None'}</span>
+                        </div>
+                        <div className="bg-white text-black p-2 border-2 border-black flex items-center justify-between">
+                            <span className="text-[9px] font-black uppercase">🛰️ Dep Hub</span>
+                            <span className="text-[10px] font-bold truncate max-w-[150px]">{vitals.dependencyHub || 'None'}</span>
+                        </div>
                     </div>
                 </div>
 
