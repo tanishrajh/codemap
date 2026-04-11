@@ -126,6 +126,7 @@ function App() {
         isOpen={isDrawerOpen} 
         onClose={() => setIsDrawerOpen(false)} 
         node={response?.nodes?.find(n => n.id === selectedNode)}
+        onNavigate={setSelectedNode}
       />
     </div>
   );

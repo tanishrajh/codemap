@@ -3,14 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export default function SourceDrawer({ isOpen, onClose, node }) {
+export default function SourceDrawer({ isOpen, onClose, node, onNavigate }) {
     if (!node) return null;
 
     const copyToClipboard = () => {
         if (!node.content) return;
         navigator.clipboard.writeText(node.content);
-        // We could add a "Copied!" toast here if we had one
     };
+
+    const imports = node.overview?.dependencies || [];
 
     return (
         <AnimatePresence>
@@ -34,27 +35,47 @@ export default function SourceDrawer({ isOpen, onClose, node }) {
                         className="fixed top-0 right-0 h-full w-[600px] bg-white border-l-[6px] border-black z-[101] shadow-[-10px_0_0_0_rgba(0,0,0,0.1)] flex flex-col"
                     >
                         {/* Header */}
-                        <div className="p-6 bg-[#F3C623] border-b-[6px] border-black flex items-center justify-between">
-                            <div className="overflow-hidden">
-                                <h2 className="text-sm font-black uppercase truncate" title={node.id}>
-                                    {node.id.split('/').pop()}
-                                </h2>
-                                <p className="text-[10px] font-bold opacity-70 truncate uppercase">{node.id}</p>
+                        <div className="p-6 bg-[#F3C623] border-b-[6px] border-black flex flex-col gap-4">
+                            <div className="flex items-center justify-between">
+                                <div className="overflow-hidden">
+                                    <h2 className="text-sm font-black uppercase truncate" title={node.id}>
+                                        {node.id.split('/').pop()}
+                                    </h2>
+                                    <p className="text-[10px] font-bold opacity-70 truncate uppercase">{node.id}</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button 
+                                        onClick={copyToClipboard}
+                                        className="bg-white border-[3px] border-black px-3 py-1 text-[10px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-[3px_3px_0_0_#000] active:shadow-none active:translate-y-1 active:translate-x-1"
+                                    >
+                                        Copy
+                                    </button>
+                                    <button 
+                                        onClick={onClose}
+                                        className="bg-[#EF476F] text-white border-[3px] border-black px-3 py-1 text-[10px] font-black uppercase hover:bg-black transition-all shadow-[3px_3px_0_0_#000] active:shadow-none active:translate-y-1 active:translate-x-1"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
                             </div>
-                            <div className="flex gap-2">
-                                <button 
-                                    onClick={copyToClipboard}
-                                    className="bg-white border-[3px] border-black px-3 py-1 text-[10px] font-black uppercase hover:bg-black hover:text-white transition-all shadow-[3px_3px_0_0_#000] active:shadow-none active:translate-y-1 active:translate-x-1"
-                                >
-                                    Copy Code
-                                </button>
-                                <button 
-                                    onClick={onClose}
-                                    className="bg-[#EF476F] text-white border-[3px] border-black px-3 py-1 text-[10px] font-black uppercase hover:bg-black transition-all shadow-[3px_3px_0_0_#000] active:shadow-none active:translate-y-1 active:translate-x-1"
-                                >
-                                    Close
-                                </button>
-                            </div>
+
+                            {/* Refinement 1: Quick Jump Navigation */}
+                            {imports.length > 0 && (
+                                <div className="flex flex-col gap-1.5">
+                                    <span className="text-[8px] font-black uppercase opacity-60">Navigate to Imports:</span>
+                                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                                        {imports.map((imp, i) => (
+                                            <button 
+                                                key={i}
+                                                onClick={() => onNavigate && onNavigate(imp)}
+                                                className="shrink-0 bg-white border-[2px] border-black px-2 py-0.5 mt-1 text-[9px] font-bold hover:bg-black hover:text-white transition-all shadow-[2px_2px_0_0_#000] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
+                                            >
+                                                {imp?.split('/')?.pop() || 'NA'}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Content */}
