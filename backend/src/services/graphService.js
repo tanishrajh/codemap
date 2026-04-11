@@ -96,20 +96,6 @@ exports.buildGraph = (files) => {
     const totalLinks = uniqueEdges.length;
     const density = totalFiles === 0 ? 0 : parseFloat((totalLinks / totalFiles).toFixed(2));
     
-    // Find special nodes
-    let godObject = { id: 'NA', score: 0 };
-    let dependencyHub = { id: 'NA', score: 0 };
-    
-    scores.forEach(s => {
-        const totalDegree = s.inDegree + s.outDegree;
-        if (totalDegree > godObject.score) {
-            godObject = { id: s.file, score: totalDegree };
-        }
-        if (s.outDegree > dependencyHub.score) {
-            dependencyHub = { id: s.file, score: s.outDegree };
-        }
-    });
-
     const graph = {
         nodes: filePaths.map(p => {
             const fileData = files.find(f => f.path === p);
@@ -130,9 +116,7 @@ exports.buildGraph = (files) => {
         vitals: {
             totalFiles,
             totalLinks,
-            density,
-            godObject: godObject.id.split('/').pop(),
-            dependencyHub: dependencyHub.id.split('/').pop()
+            density
         }
     };
 

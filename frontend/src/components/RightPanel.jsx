@@ -158,7 +158,7 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
             <div className="space-y-5 h-full flex flex-col">
                 <div className="bg-white border-[3px] border-black p-4 shadow-[4px_4px_0_0_#000]">
                     <h3 className="text-[11px] font-black uppercase bg-black text-white inline-block px-2 mb-3 tracking-widest">Repository Vitals</h3>
-                    <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-2 gap-3">
                         <div className="bg-[#C2EABD] border-[3px] border-black p-2 shadow-[2px_2px_0_0_#000]">
                             <div className="text-[8px] font-black uppercase opacity-60">Breadth (Files)</div>
                             <div className="text-lg font-black">{vitals.totalFiles || 0}</div>
@@ -166,17 +166,6 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                         <div className="bg-[#118AB2] text-white border-[3px] border-black p-2 shadow-[2px_2px_0_0_#000]">
                             <div className="text-[8px] font-black uppercase opacity-80">Modular Density</div>
                             <div className="text-lg font-black">{vitals.density || 0}</div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <div className="bg-black text-white p-2 border-2 border-black flex items-center justify-between">
-                            <span className="text-[9px] font-black uppercase">👑 God Object</span>
-                            <span className="text-[10px] font-bold truncate max-w-[150px]">{vitals.godObject || 'None'}</span>
-                        </div>
-                        <div className="bg-white text-black p-2 border-2 border-black flex items-center justify-between">
-                            <span className="text-[9px] font-black uppercase">🛰️ Dep Hub</span>
-                            <span className="text-[10px] font-bold truncate max-w-[150px]">{vitals.dependencyHub || 'None'}</span>
                         </div>
                     </div>
                 </div>
