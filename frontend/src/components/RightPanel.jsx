@@ -48,20 +48,15 @@ const FileTreeNode = ({ node, level = 0, onNodeClick }) => {
     );
 };
 
-export default function RightPanel({ response, loading, selectedNode, onClearSelection, onIssueClick }) {
+export default function RightPanel({ response, loading, selectedNode, onClearSelection, onIssueClick, onOpenSource }) {
     const [activeTab, setActiveTab] = useState('Overview');
-    const [showSource, setShowSource] = useState(false);
-
-    // Reset showSource when selectedNode changes
-    useEffect(() => {
-        setShowSource(false);
-    }, [selectedNode]);
     
     const tabs = [
         { id: 'Overview', label: 'DATA' },
         { id: 'Issues', label: 'BUGS' }
     ];
 
+    // Global state
     const issues = response?.issues || [];
 
     const renderSelectedNode = () => {
@@ -74,7 +69,7 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
         return (
             <div className="space-y-4">
                 <div className="flex items-start gap-3 bg-[#118AB2] text-white border-[3px] border-black p-3 shadow-[4px_4px_0_0_#000]">
-                    <button onClick={onClearSelection} className="w-6 h-6 shrink-0 bg-white border-2 border-black text-black font-black flex items-center justify-center hover:bg-black hover:text-white mt-1.5">X</button>
+                    <button onClick={onClearSelection} className="w-6 h-6 shrink-0 bg-white border-2 border-black text-black font-black flex items-center justify-center hover:bg-black hover:text-white mt-1.5 transition-colors">X</button>
                     <div className="overflow-hidden">
                         <h3 className="font-black text-sm uppercase truncate w-full" title={node.name}>{node.name}</h3>
                         <p className="text-[9px] font-mono font-bold bg-black text-white px-1 mt-1 truncate inline-block max-w-full" title={node.id}>{node.id}</p>
@@ -98,7 +93,7 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                         <h4 className="text-[10px] font-black uppercase border-b-2 border-black pb-1 mb-2">
                             Needs ({ov.dependencyCount || 0})
                         </h4>
-                        <ul className="text-[10px] font-bold space-y-1 max-h-24 overflow-y-auto">
+                        <ul className="text-[10px] font-bold space-y-1 max-h-24 overflow-y-auto custom-scrollbar">
                             {ov.dependencies?.length ? ov.dependencies.map(d => <li key={d} className="truncate before:content-['>'] before:mr-1 uppercase">{d.split('/').pop()}</li>) : <li className="uppercase opacity-50">Empty</li>}
                         </ul>
                     </div>
@@ -106,38 +101,21 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
                         <h4 className="text-[10px] font-black uppercase border-b-2 border-black pb-1 mb-2">
                             Used By ({ov.dependentCount || 0})
                         </h4>
-                        <ul className="text-[10px] font-bold space-y-1 max-h-24 overflow-y-auto">
+                        <ul className="text-[10px] font-bold space-y-1 max-h-24 overflow-y-auto custom-scrollbar">
                             {ov.dependents?.length ? ov.dependents.map(d => <li key={d} className="truncate before:content-['<-'] before:mr-1 uppercase">{d.split('/').pop()}</li>) : <li className="uppercase opacity-50">Empty</li>}
                         </ul>
                     </div>
                 </div>
 
-                <div className="mt-6 border-[3px] border-black bg-white shadow-[4px_4px_0_0_#000]">
+                <div className="mt-4">
                     <button 
-                        onClick={() => setShowSource(!showSource)}
-                        className="w-full py-3 bg-black text-white text-xs font-black uppercase hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+                        onClick={onOpenSource}
+                        className="w-full py-4 bg-[#F3C623] border-[3px] border-black text-black text-[11px] font-black uppercase hover:-translate-y-1 hover:-translate-x-1 shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all flex items-center justify-center gap-3 group"
                     >
-                        {showSource ? 'Close Source' : 'View Source'}
-                        <span className="bg-[#F3C623] text-black px-1.5 border border-white text-[9px]">{node.extension || 'JS'}</span>
+                        🔍 VIEW SOURCE CODE
+                        <span className="bg-black text-white px-1.5 border border-white text-[9px] group-hover:bg-[#EF476F] transition-colors">{node.extension || 'JS'}</span>
                     </button>
-                    
-                    {showSource && (
-                        <div className="p-1 max-h-[400px] overflow-auto bg-[#1e1e1e] custom-scrollbar">
-                            <SyntaxHighlighter
-                                language={node.extension?.replace('.', '') || 'javascript'}
-                                style={vscDarkPlus}
-                                customStyle={{
-                                    margin: 0,
-                                    padding: '1rem',
-                                    fontSize: '10px',
-                                    fontFamily: 'monospace',
-                                    background: 'transparent'
-                                }}
-                            >
-                                {node.content || '// No content available'}
-                            </SyntaxHighlighter>
-                        </div>
-                    )}
+                    <p className="text-[8px] font-bold text-center mt-2 opacity-50 uppercase tracking-widest">Connect to Bridge Drawer</p>
                 </div>
             </div>
         );

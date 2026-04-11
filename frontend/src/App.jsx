@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LeftPanel from './components/LeftPanel';
 import CenterPanel from './components/CenterPanel';
 import RightPanel from './components/RightPanel';
+import SourceDrawer from './components/SourceDrawer';
 import { processRepository } from './services/apiService';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [response, setResponse] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [history, setHistory] = useState(() => {
     try {
@@ -117,6 +119,13 @@ function App() {
         selectedNode={selectedNode}
         onClearSelection={() => setSelectedNode(null)}
         onIssueClick={wrapIssueClick}
+        onOpenSource={() => setIsDrawerOpen(true)}
+      />
+
+      <SourceDrawer 
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)} 
+        node={response?.nodes?.find(n => n.id === selectedNode)}
       />
     </div>
   );
