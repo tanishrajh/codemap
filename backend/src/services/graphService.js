@@ -91,7 +91,7 @@ exports.buildGraph = (files) => {
         }
     });
 
-    // Calculate Project Vitals
+    // calculate project vitals
     const totalFiles = filePaths.length;
     const totalLinks = uniqueEdges.length;
     const density = totalFiles === 0 ? 0 : parseFloat((totalLinks / totalFiles).toFixed(2));

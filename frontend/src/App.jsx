@@ -10,7 +10,7 @@ function App() {
   const [repoUrl, setRepoUrl] = useState('');
   const [file, setFile] = useState(null);
 
-  // Global state
+  // global state
   const [loading, setLoading] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [response, setResponse] = useState(null);
@@ -48,7 +48,7 @@ function App() {
       setMode('local');
     }
     
-    // Simulate loading to preserve the theatrical agent UI experience
+    // simulate loading to preserve the theatrical agent ui experience
     setTimeout(() => {
       setResponse(entry.data);
       setAnalysisComplete(true);

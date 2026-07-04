@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const MAX_FILES = 50;
-const MAX_FILE_SIZE = 200 * 1024; // 200KB
+const MAX_FILE_SIZE = 200 * 1024; // 200kb
 
 const INCLUDED_EXTENSIONS = new Set(['.js', '.ts', '.jsx', '.tsx', '.py', '.json']);
 const EXCLUDED_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.vscode', '.idea']);
@@ -37,15 +37,15 @@ exports.traverseDirectory = (dirPath) => {
                     walk(filePath, [...relativeParts, file]);
                 }
             } else {
-                // Detect README
+                // detect readme
                 if (!readmeContent && file.toLowerCase().includes('readme.md')) {
                     try {
                         const content = fs.readFileSync(filePath, 'utf8');
-                        readmeContent = content.substring(0, 5000); // Limit to first 5KB
+                        readmeContent = content.substring(0, 5000); // limit to first 5kb
                     } catch (e) { }
                 }
 
-                if (stat.size < 10) continue; // Skip empty / tiny files
+                if (stat.size < 10) continue; // skip empty / tiny files
 
                 const ext = path.extname(file).toLowerCase();
                 if (INCLUDED_EXTENSIONS.has(ext)) {
@@ -62,7 +62,7 @@ exports.traverseDirectory = (dirPath) => {
 
     walk(dirPath, []);
 
-    // Sort files to prioritize `src/` and JS/TS files
+    // sort files to prioritize `src/` and js/ts files
     allFiles.sort((a, b) => {
         const aPath = a.originalRelative.join('/');
         const bPath = b.originalRelative.join('/');
@@ -81,10 +81,10 @@ exports.traverseDirectory = (dirPath) => {
         return b.size - a.size; // fallback to size
     });
 
-    // Select top limits
+    // select top limits
     const selectedFiles = allFiles.slice(0, MAX_FILES);
 
-    // Read contents
+    // read contents
     const parsedFiles = selectedFiles.map(fileObj => {
         let content = '';
         try {

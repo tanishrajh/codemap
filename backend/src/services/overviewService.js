@@ -4,24 +4,24 @@
 exports.summarizeReadme = (content) => {
     if (!content) return null;
 
-    // Split into lines
+    // split into lines
     const lines = content.split('\n');
 
     const meaningfulLines = [];
     for (let line of lines) {
         let l = line.trim();
-        // Skip headers, code blocks, images, badges, pure links, empty lines
+        // skip headers, code blocks, images, badges, pure links, empty lines
         if (l.startsWith('#')) continue;
         if (l.startsWith('```')) continue;
         if (l.startsWith('![')) continue;
         if (l.startsWith('<') && l.endsWith('>')) continue;
         if (l.startsWith('[') && l.includes('](')) {
-            // Check if line is just a link/badge
+            // check if line is just a link/badge
             if (l.indexOf('](') < 15 && l.length < 150) continue;
         }
         if (l === '') continue;
 
-        // Clean bold, italics, links
+        // clean bold, italics, links
         l = l.replace(/\*\*/g, '').replace(/\*/g, '');
         l = l.replace(/`([^`]+)`/g, '$1');
         l = l.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
@@ -29,7 +29,7 @@ exports.summarizeReadme = (content) => {
         if (l.length > 20) {
             meaningfulLines.push(l);
         }
-        if (meaningfulLines.length >= 4) break; // Limit to ~4 lines
+        if (meaningfulLines.length >= 4) break; // limit to ~4 lines
     }
 
     if (meaningfulLines.length === 0) return null;
@@ -66,7 +66,7 @@ exports.buildFileTree = (files) => {
         }
     });
 
-    // Helper to sort folders first, then files alphabetically
+    // helper to sort folders first, then files alphabetically
     const sortTree = (node) => {
         if (node.children) {
             node.children.sort((a, b) => {

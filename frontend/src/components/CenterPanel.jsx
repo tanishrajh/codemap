@@ -39,13 +39,13 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
         if (selectedNode) {
             if (node.id === selectedNode) { 
                 opacity = 1.0; 
-                sizeMultiplier = 1.3; // Extra pop for the pivot node
+                sizeMultiplier = 1.3; // extra pop for the pivot node
             } else {
                 const isNeighbor = response?.edges?.some(e =>
                     (e.source === selectedNode && e.target === node.id) || (e.target === selectedNode && e.source === node.id) ||
                     (e.source?.id === selectedNode && e.target?.id === node.id) || (e.target?.id === selectedNode && e.source?.id === node.id)
                 );
-                opacity = isNeighbor ? 1.0 : 0.05; // Aggressive fade
+                opacity = isNeighbor ? 1.0 : 0.05; // aggressive fade
                 sizeMultiplier = isNeighbor ? 1.15 : 1.0;
             }
         } else if (node.importanceLevel === 'LOW') { opacity = 0.35; }
@@ -72,7 +72,7 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
             ctx.beginPath(); ctx.arc(node.x, node.y, size * 2.2, 0, 2 * Math.PI); ctx.fillStyle = 'rgba(0,0,0,1)'; ctx.fill();
             ctx.beginPath(); ctx.arc(node.x, node.y, size * 1.6, 0, 2 * Math.PI); ctx.fillStyle = 'rgba(255,255,255,1)'; ctx.fill();
         } else {
-            // Draw harsh inner shadow/border for neo brutalism feel on nodes
+            // draw harsh inner shadow/border for neo brutalism feel on nodes
             ctx.globalAlpha = opacity;
             ctx.beginPath(); ctx.arc(node.x, node.y, size + 1.5, 0, 2 * Math.PI); ctx.fillStyle = '#000000'; ctx.fill();
         }
@@ -116,8 +116,8 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
         const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
         const targetId = typeof link.target === 'object' ? link.target.id : link.target;
         
-        if (sourceId === selectedNode) return 'rgba(217,119,6,1)'; // Yellow arrow OUT
-        if (targetId === selectedNode) return 'rgba(29,78,216,1)'; // Blue arrow IN
+        if (sourceId === selectedNode) return 'rgba(217,119,6,1)'; // yellow arrow out
+        if (targetId === selectedNode) return 'rgba(29,78,216,1)'; // blue arrow in
         return 'rgba(0,0,0,0.1)';
     }, [selectedNode]);
 
@@ -175,7 +175,7 @@ export default function CenterPanel({ response, selectedNode, onNodeSelected, lo
     const handleSearchSelect = (node) => {
         if (!fgRef.current || !node) return;
         
-        // Use coordinates if available, otherwise force simulation to settle a bit
+        // use coordinates if available, otherwise force simulation to settle a bit
         const x = node.x ?? 0;
         const y = node.y ?? 0;
         

@@ -56,7 +56,7 @@ export default function RightPanel({ response, loading, selectedNode, onClearSel
         { id: 'Issues', label: 'BUGS' }
     ];
 
-    // Global state
+    // global state
     const issues = response?.issues || [];
 
     const renderSelectedNode = () => {

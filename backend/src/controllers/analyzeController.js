@@ -10,7 +10,7 @@ exports.analyze = async (req, res) => {
     const { type } = req.body;
 
     try {
-        // Phase 1: Ingestion
+        // phase 1: ingestion
         let extractedPath = '';
 
         if (type === 'local') {
@@ -33,18 +33,18 @@ exports.analyze = async (req, res) => {
             return res.status(400).json({ error: "Invalid type. Must be 'github' or 'local'." });
         }
 
-        // Phase 2: File Traversal
+        // phase 2: file traversal
         console.log('[Parser] Traversing files...');
         const traverseResult = fileService.traverseDirectory(extractedPath);
         const files = traverseResult.files || [];
         const readme = traverseResult.readme;
 
-        // Phase 3: Graph + Classification
+        // phase 3: graph + classification
         console.log('[Analyzer] Building dependency graph...');
         const graphData = graphService.buildGraph(files);
         graphData.nodes = classificationService.classifyNodes(graphData.nodes);
 
-        // Phase 4: Insight Engine
+        // phase 4: insight engine
         console.log('[Critic] Computing rule-based insights...');
         const insightData = insightService.analyze(graphData.nodes, graphData.edges, files, graphData.cycles);
 

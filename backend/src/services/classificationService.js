@@ -7,16 +7,16 @@ exports.classifyNodes = (nodes) => {
         const basename = path.basename(lowerPath);
         const parts = lowerPath.split('/');
 
-        let category = 'Core Logic'; // Default fallback
+        let category = 'Core Logic'; // default fallback
 
-        // 1. Filename-based exact rules (Highest priority)
+        // 1. filename-based exact rules (highest priority)
         const coreExact = ['app.js', 'app.jsx', 'app.ts', 'app.tsx', 'main.js', 'main.jsx', 'main.ts', 'main.tsx', 'index.js', 'index.jsx', 'index.ts', 'index.tsx'];
         if (coreExact.includes(basename)) {
             category = 'Core Logic';
         } else if (basename === 'config.json' || basename === '.env' || basename.includes('config.js') || basename.includes('config.ts')) {
             category = 'Config';
         } else {
-            // 2. Folder-based rules
+            // 2. folder-based rules
             let foundFolderMatch = false;
             for (const part of parts) {
                 if (['components', 'pages', 'views'].includes(part)) {
@@ -46,7 +46,7 @@ exports.classifyNodes = (nodes) => {
                 }
             }
 
-            // 3. Extension-based fallback
+            // 3. extension-based fallback
             if (!foundFolderMatch) {
                 if (basename.endsWith('.json')) {
                     category = 'Data';

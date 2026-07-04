@@ -1,129 +1,111 @@
-# CodeMap 🧠 🛰️
+# CodeMap
 
-### **Deterministic Codebase Analysis & Architectural Visualization Engine**
+### Deterministic Codebase Analysis & Architectural Visualization Engine
 
-CodeMap is a high-performance analysis platform that transforms raw source code into an interactive dependency map. It uses **Graph Theory** and **Static Analysis** to identify structural rot, detect circular dependencies, and provide a clear bird's-eye view of any JavaScript, TypeScript, or Python project.
-
-**No AI, No API Keys, No Latency. Just pure structural code intelligence.**
+CodeMap is a high-performance static analysis platform designed to transform raw source code into an interactive dependency graph. Utilizing graph theory algorithms, the engine maps structural architecture, identifies recursive import loops (circular dependencies), and exposes technical debt across JavaScript, TypeScript, and Python repositories—all running entirely locally without reliance on external APIs.
 
 ---
 
-## 📑 **Executive Summary**
-CodeMap builds a live dependency graph and classifies modules into architectural layers. It is designed for developers who need to understand a new codebase instantly or identify critical technical debt in existing projects.
+## Executive Summary
 
-- **[Core Features](#-core-features)**
-- **[Intelligence Pipeline](#-intelligence-pipeline)**
-- **[Tech Stack](#-the-tech-stack)**
-- **[Setup Guide](#-setup-guide)**
+CodeMap constructs a live directed graph and categorizes source modules into distinct architectural layers. It serves as an auditing tool for software engineers needing immediate architectural comprehension or technical debt identification in complex codebases.
 
----
+## Core Features
 
-## 🔥 **Core Features**
+### 1. Multi-Source Ingestion
+- **GitHub Synchronization**: Instantly analyze public repositories via URL.
+- **Local Workspace**: Securely parse uploaded `.zip` archives for private, offline analysis.
 
-### 1. 📂 **Multi-Source Ingestion**
-- **GitHub Sync**: Analyze any public repository instantly via URL.
-- **Local Workspace**: Securely upload `.zip` archives for private, offline analysis.
+### 2. Deterministic Dependency Mapping
+- **Deep Scanning**: Traces standard `import`, `require`, and dynamic module dependency patterns.
+- **Relationship Analysis**: Computes In-Degree (architectural impact) and Out-Degree (module complexity) metrics for all tracked files.
+- **Centrality Detection**: Computationally isolates the core structural modules of the application.
 
-### 2. 🕸️ **Deterministic Dependency Mapping**
-- **Deep Scanning**: Maps `import`, `require`, and dynamic dependency patterns.
-- **Relationship Analysis**: Computes In-Degree (Impact) and Out-Degree (Complexity) for every single file.
-- **Centrality Detection**: Identifies the "Core Modules" that the rest of your system depends on.
+### 3. Interactive Visualization & Search
+- **Real-time Autocomplete**: Search and index nodes across large-scale codebases instantly.
+- **Cinematic Rendering**: High-performance D3 physics simulation with automatic panning and highlighting.
 
-### 3. 🔍 **Smart Search & Jump**
-- **Real-time Autocomplete**: Find any module across thousands of files instantly.
-- **Cinematic Zoom**: Seamlessly pans and zooms the 2D graph to highlight your selection.
+### 4. Circular Dependency Detection
+- **Cycle Discovery**: Recursively detects import loops (A → B → A) known to induce memory leaks and runtime failures.
+- **Visual Auditing**: Highlights the explicit file chains responsible for structural loops.
 
-### 4. 🔄 **Circular Dependency Detective**
-- **Cycle Discovery**: Identifies recursive import loops (A → B → A) that cause memory leaks and runtime issues.
-- **Visual Chains**: See the exact path of files involved in a structural loop in the **BUGS** tab.
-
-### 5. 📤 **Professional Export Suite**
-- **JSON Data**: Export your entire analysis (nodes, edges, metrics) for archival.
-- **CSV Ledger**: Download your architectural bug list for Jira or spreadsheet tracking.
+### 5. Professional Export Suite
+- **JSON Data**: Export complete graph structures (nodes, edges, metrics) for subsequent auditing.
+- **CSV Ledger**: Download tabular reports of architectural bottlenecks for issue tracking (e.g., Jira).
 
 ---
 
-## 🏗️ **Intelligence Pipeline**
+## Intelligence Pipeline
 
-CodeMap executes a **6-stage autonomous loop** during every analysis:
+During execution, CodeMap processes repositories through a 6-stage autonomous pipeline:
 
-1. **Ingestion**: Securely downloads and extracts the repository source.
-2. **Traversal**: Recursively walks the tree, prioritizing code over noise (`node_modules`, etc.).
-3. **Logic Graph**: Builds directed edges and calculates node importance based on imports.
-4. **Categorization**: Classifies modules into **UI**, **Backend**, **Logic**, **Utility**, or **Config** layers.
-5. **Critic Engine**: Scans for structural anti-patterns, complexity hotspots, and cycles.
-6. **Reporting**: Compiles the interactive dashboard and interactive file tree.
-
----
-
-## 🛠️ **The Tech Stack**
-
-### **The Frontend (Visuals)**
-- **React 19** + **Vite 8**: Ultra-fast hot-reloading dashboard.
-- **Tailwind CSS 3**: Neobrutalist design system with high-contrast styling.
-- **react-force-graph-2d**: D3-powered physics simulation.
-
-### **The Backend (Engine)**
-- **Node.js 18+** + **Express 4**: Robust API orchestration.
-- **AdmZip**: High-speed local archive processing.
-- **Axios**: Intelligent fetching for GitHub repository ingestion.
+1. **Ingestion**: Securely downloads and extracts repository archives.
+2. **Traversal**: Recursively walks the directory tree, excluding non-source directories (e.g., `node_modules`).
+3. **Logic Graph**: Constructs directed edges and calculates node importance based on dependency frequencies.
+4. **Categorization**: Classifies modules into logical layers (UI, Backend, Logic, Utility, Config).
+5. **Critic Engine**: Scans for structural anti-patterns and complexity hotspots.
+6. **Reporting**: Compiles the data for the interactive frontend dashboard.
 
 ---
 
-## 🚀 **Setup Guide**
+## Technology Stack
 
-Follow these steps to run CodeMap locally. **Note: No API keys or `.env` files are required.**
+### Frontend Architecture
+- **Framework**: React 19 + Vite 8 (Hot-reloading dashboard)
+- **Styling**: Tailwind CSS 3
+- **Visualization**: `react-force-graph-2d` (D3-powered physics simulation)
 
-### **1. Clone the Repository**
+### Backend Engine
+- **Runtime**: Node.js 18+ + Express 4
+- **Archive Processing**: `adm-zip` for high-speed local extraction
+- **Network Requests**: `axios` for GitHub repository ingestion
+
+---
+
+## Local Deployment Guide
+
+Follow these instructions to deploy CodeMap locally. Note: No API keys or `.env` configurations are required.
+
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/tanishrajh/CodeMap.git
 cd CodeMap
 ```
 
-### **2. Start the Backend**
-The backend serves the analysis engine and repository parser.
+### 2. Initialize the Backend Engine
+The backend serves the analysis logic and file parsing utilities.
 ```bash
 cd backend
 npm install
 npm run dev
 ```
-*The server will run on `http://localhost:3000`.*
+*The server initializes on port `3000`.*
 
-### **3. Start the Frontend**
-Open a **new terminal window** to run the dashboard.
+### 3. Initialize the Frontend Dashboard
+Open a new terminal window to serve the client interface.
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*The dashboard will run on `http://localhost:5173`.*
+*The dashboard initializes on port `5173`.*
 
-### **4. Access CodeMap**
-Open your browser and navigate to:
-**[http://localhost:5173](http://localhost:5173)**
+### 4. Access the Platform
+Navigate your web browser to `http://localhost:5173`.
 
 ---
 
-## 💡 **How To Use**
+## Troubleshooting
 
-1. **Connect**: Input a GitHub URL or upload a ZIP.
-## 🛠️ Troubleshooting
-
-| Problem | Cause | Solution |
+| Problem | Cause | Resolution |
 |---------|-------|----------|
-| Blank explanation / fallback text | API key missing or expired | Check `backend/.env` has a valid `GEMINI_API_KEY` |
-| "File not found on disk" | Path sync lost between sessions | Click "Analyze" again to re-ingest the repository |
-| 429 Too Many Requests | Gemini free-tier rate limit (15 RPM) | Wait 60 seconds between rapid "Examine Purpose" clicks |
-| Backend won't start on port 3000 | Port already in use | Run `npx kill-port 3000` or change `PORT` in `.env` |
-| GitHub repo fails to download | Repo is private or URL is invalid | Use "Local Upload" mode instead, or check the URL |
-| Graph is empty after analysis | Repo has no supported file types | CodeMap supports `.js`, `.ts`, `.jsx`, `.tsx`, `.py`, `.json` |
+| "File not found on disk" | Path synchronization lost between sessions. | Initiate a new analysis to re-ingest the repository. |
+| Backend fails to start (Port 3000) | Port already bound to another process. | Terminate the process (e.g., `npx kill-port 3000`) or adjust the port configuration. |
+| GitHub repository fails to download | Repository is private or URL is malformed. | Utilize the Local Upload feature with a `.zip` archive. |
+| Graph renders empty | No supported files found in repository. | CodeMap currently supports `.js`, `.ts`, `.jsx`, `.tsx`, `.py`, and `.json`. |
 
 ---
 
-## 📄 License
+## License
 
-ISC
-
----
-
-*Built to make codebases readable again.* 
+ISC License

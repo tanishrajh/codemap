@@ -8,31 +8,31 @@ exports.analyze = (nodes, edges, files, cycles = []) => {
         const filePath = node.id;
         const basename = path.basename(filePath).toLowerCase();
 
-        // 1. Dependencies and Dependents
+        // 1. dependencies and dependents
         const dependencies = edges.filter(e => e.source === filePath).map(e => e.target);
         const dependents = edges.filter(e => e.target === filePath).map(e => e.source);
 
         const dependencyCount = dependencies.length;
         const dependentCount = dependents.length;
 
-        // 2. Role Classification
+        // 2. role classification
         let role = 'General Module';
         if (basename.includes('app')) role = 'Main Component';
         else if (basename.includes('index') || basename.includes('main')) role = 'Entry Module';
         else if (basename.includes('api')) role = 'API Layer';
         else if (basename.includes('util')) role = 'Utility Module';
 
-        // 3. Structural Position
+        // 3. structural position
         let structuralPosition = 'Unclassified';
         if (dependencyCount > 0 && dependentCount > 0) structuralPosition = 'Intermediate Node';
         else if (dependencyCount > 0 && dependentCount === 0) structuralPosition = 'Root Node';
         else if (dependencyCount === 0 && dependentCount > 0) structuralPosition = 'Leaf Node';
         else if (dependencyCount === 0 && dependentCount === 0) structuralPosition = 'Isolated Node';
 
-        // 4. Entry Point Detection
+        // 4. entry point detection
         const isEntry = ['index.js', 'main.js', 'app.js'].includes(basename);
 
-        // Build Overview
+        // build overview
         const overview = {
             role,
             dependencies,
@@ -43,7 +43,7 @@ exports.analyze = (nodes, edges, files, cycles = []) => {
             isEntry
         };
 
-        // 5. Issues Generation
+        // 5. issues generation
         const nodeIssues = [];
 
         if (dependencyCount >= 3) {
@@ -70,7 +70,7 @@ exports.analyze = (nodes, edges, files, cycles = []) => {
             nodeIssues.push('Entry point of the application');
         }
 
-        // Add to global issues collection for the dashboard
+        // add to global issues collection for the dashboard
         nodeIssues.forEach(issue => {
             const severityMap = {
                 'High impact file — changes may affect multiple parts of the system': 'HIGH',
@@ -84,7 +84,7 @@ exports.analyze = (nodes, edges, files, cycles = []) => {
             globalIssues.push({
                 file: filePath,
                 message: issue,
-                type: issue.split(' — ')[0] || issue, // roughly derive type from issue string 
+                type: issue.split(' — ')[0] || issue, // roughly derive type from issue string
                 severity: severityMap[issue] || 'LOW',
                 goalRelevant: false
             });
@@ -97,11 +97,11 @@ exports.analyze = (nodes, edges, files, cycles = []) => {
         });
     });
 
-    // 6. Circular Dependency Detection
+    // 6. circular dependency detection
     cycles.forEach(cycle => {
         const cycleStr = cycle.map(p => path.basename(p)).join(' -> ');
         globalIssues.push({
-            file: cycle[0], // Attribute to the first file in the cycle
+            file: cycle[0], // attribute to the first file in the cycle
             message: `Circular dependency detected: ${cycleStr}`,
             type: 'Circular Dependency',
             severity: 'HIGH',
